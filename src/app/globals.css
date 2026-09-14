@@ -1,0 +1,264 @@
+@import "tailwindcss";
+
+/* =========================================================
+   TAILWIND V4 THEME — Stitch Design Tokens
+   ========================================================= */
+@theme {
+  /* Colors */
+  --color-primary-container: #e31b23;
+  --color-surface-bright: #3a3939;
+  --color-on-surface-variant: #e7bdb8;
+  --color-on-error-container: #ffdad6;
+  --color-on-primary-container: #fff9f8;
+  --color-primary: #ffb4ac;
+  --color-outline-variant: #262626;
+  --color-surface-container-low: #111111;
+  --color-surface-container: #161616;
+  --color-surface-container-high: #202020;
+  --color-outline: #1f1f1f;
+  --color-tertiary: #8e8e93;
+  --color-secondary: #a1a1aa;
+  --color-surface: #0d0d0d;
+  --color-surface-container-lowest: #070707;
+  --color-on-surface: #f4f4f5;
+  --color-background: #050505;
+  --color-accent: #e31b23;
+  --color-accent-hover: #ff2d36;
+
+  /* Font families */
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: "Inter", sans-serif;
+
+  /* Letter spacing */
+  --letter-spacing-ultra-wide: 0.22em;
+  --letter-spacing-tighter-hero: -0.05em;
+
+  /* Max widths */
+  --width-8xl: 1400px;
+
+  /* Keyframes */
+  --animate-terminal-blink: terminal-blink 1.05s infinite;
+  --animate-pulse-glow: pulse-glow 1.5s ease-in-out infinite;
+  --animate-fade-in-up: fade-in-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  @keyframes terminal-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 8px rgba(227, 27, 35, 0.25); }
+    50% { box-shadow: 0 0 20px rgba(227, 27, 35, 0.65); }
+  }
+
+  @keyframes fade-in-up {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* =========================================================
+   CSS VARIABLE FONT OVERRIDES (next/font injects these)
+   ========================================================= */
+@layer base {
+  :root {
+    --font-display: var(--font-space-grotesk), sans-serif;
+    --font-mono: var(--font-jetbrains-mono), monospace;
+    --font-sans: var(--font-inter), sans-serif;
+  }
+}
+
+/* =========================================================
+   GLOBAL BASE
+   ========================================================= */
+@layer base {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #050505;
+    color: #f4f4f5;
+  }
+  body {
+    overflow-x: hidden;
+    font-family: var(--font-mono);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* =========================================================
+   CUSTOM SCROLLBAR
+   ========================================================= */
+::-webkit-scrollbar {
+  width: 2px;
+}
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #e31b23;
+}
+
+/* =========================================================
+   CUSTOM CURSOR (desktop / fine pointer only)
+   ========================================================= */
+@media (pointer: fine) {
+  body,
+  a,
+  button {
+    cursor: crosshair;
+  }
+
+  .cursor-dot {
+    position: fixed;
+    width: 4px;
+    height: 4px;
+    background: #e31b23;
+    border-radius: 9999px;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.2s ease;
+    will-change: left, top;
+  }
+
+  .cursor-ring {
+    position: fixed;
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(227, 27, 35, 0.4);
+    border-radius: 9999px;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition:
+      width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease,
+      background-color 0.25s ease;
+    will-change: left, top;
+  }
+
+  .cursor-ring.is-hovering {
+    width: 54px;
+    height: 54px;
+    border-color: rgba(227, 27, 35, 0.9);
+    background-color: rgba(227, 27, 35, 0.04);
+  }
+}
+
+/* =========================================================
+   SCROLL REVEAL UTILITY
+   ========================================================= */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal-item.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================================================
+   HAIRLINE BORDERS
+   ========================================================= */
+.hairline-b {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.hairline-t {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* =========================================================
+   TERMINAL CURSOR BLINK
+   ========================================================= */
+.terminal-cursor {
+  animation: terminal-blink 1.05s infinite;
+}
+
+/* =========================================================
+   ACTIVE BADGE PULSE
+   ========================================================= */
+.active-badge-pulse:hover {
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+/* =========================================================
+   PREFERS REDUCED MOTION — kill all non-essential animation
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal-item {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .terminal-cursor {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+}
+
+/* =========================================================
+   TEXT SELECTION
+   ========================================================= */
+::selection {
+  background-color: #e31b23;
+  color: white;
+}
+
+/* =========================================================
+   UTILITY CLASSES — explicit Tailwind-style classes for
+   values not auto-generated in v4 from CSS vars
+   ========================================================= */
+.max-w-8xl {
+  max-width: 1400px;
+}
+
+.tracking-ultra-wide {
+  letter-spacing: 0.22em;
+}
+
+.font-display {
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+.font-mono {
+  font-family: var(--font-jetbrains-mono), monospace;
+}
+
+.font-sans {
+  font-family: var(--font-inter), sans-serif;
+}
+
+/* Color utilities */
+.text-primary-container { color: #e31b23; }
+.text-on-surface { color: #f4f4f5; }
+.text-on-surface-variant { color: #e7bdb8; }
+.text-primary { color: #ffb4ac; }
+.text-secondary { color: #a1a1aa; }
+.text-tertiary { color: #8e8e93; }
+.bg-background { background-color: #050505; }
+.bg-surface { background-color: #0d0d0d; }
+.bg-surface-container { background-color: #161616; }
+.bg-primary-container { background-color: #e31b23; }
+.border-primary-container { border-color: #e31b23; }
+.border-outline-variant { border-color: #262626; }
