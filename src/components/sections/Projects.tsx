@@ -1,110 +1,100 @@
 "use client";
 
+import { useRef } from "react";
+import { motion, useTransform } from "framer-motion";
 import { projects } from "@/data/portfolio";
+import { useScrollProgress } from "@/hooks/useScrollProgress";
 
 export default function Projects() {
+  const targetRef = useRef<HTMLDivElement>(null);
+  
+  const { smoothProgress } = useScrollProgress(targetRef, {
+    offset: ["start start", "end end"]
+  });
+
+  const x = useTransform(smoothProgress, [0, 1], ["0%", "-80%"]);
+
   return (
     <section
       id="works"
-      className="py-24 lg:py-32 hairline-b"
-      aria-labelledby="works-heading"
+      ref={targetRef}
+      className="relative h-[500vh] bg-background"
+      aria-label="projects"
     >
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-4">
-        <div>
-          <div className="font-mono text-xs tracking-[0.22em] text-primary-container uppercase mb-2 group inline-flex items-center gap-1 cursor-default">
-            <span className="text-zinc-500 group-hover:text-primary-container transition-colors">
-              $
+      <div className="sticky top-0 h-screen flex items-center overflow-hidden">
+        
+        {/* Section marker */}
+        <div className="absolute top-12 md:top-1/4 left-6 lg:left-12 z-20">
+          <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+            <span className="text-primary-container block mb-2 text-lg font-normal opacity-80">
+              renz@dev:~$ ls -la ./deployments
             </span>
-            <span className="group-hover:text-white transition-colors">
-              {"ls -la ./projects/"}
-            </span>
-            <span className="text-zinc-600">[02/07]</span>
-            <span className="opacity-0 group-hover:opacity-100 transition-opacity text-primary-container ml-1 font-bold">
-              {">_"}
-            </span>
-          </div>
-          <h2
-            id="works-heading"
-            className="font-mono text-2xl sm:text-3xl font-semibold tracking-tight text-white uppercase"
-          >
-            <span className="text-primary-container font-mono mr-2">#</span>
-            selected deployments &amp; software
+            total {projects.length}
           </h2>
         </div>
-        <div className="font-mono text-xs text-zinc-500 hover:text-zinc-400 transition-colors cursor-default">
-          [ 05 curated entries ]
-        </div>
-      </div>
 
-      {/* Project list */}
-      <div className="divide-y divide-zinc-900 border-y border-zinc-900">
-        {projects.map((project) => (
-          <article
-            key={project.index}
-            className="transition-all duration-300 ease-out group hover:bg-neutral-900/50 hover:pl-4 hover:border-l-2 hover:border-[#e31b23] rounded-r-md cursor-pointer py-10 reveal-item"
-            onClick={() => window.open(project.githubUrl, "_blank")}
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ")
-                window.open(project.githubUrl, "_blank");
-            }}
-            role="link"
-            aria-label={`${project.title} — ${project.description}`}
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-baseline">
-              {/* Index */}
-              <div className="lg:col-span-1 font-mono text-xs text-zinc-600 group-hover:text-primary-container transition-colors duration-200">
-                {project.index}
+        {/* Horizontal scroll track */}
+        <motion.div 
+          style={{ x }} 
+          className="flex gap-8 px-6 lg:px-[30vw] items-center h-full pt-20 md:pt-0"
+        >
+          {projects.map((project) => (
+            <motion.article
+              key={project.index}
+              initial={{ opacity: 0.4, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ root: targetRef, amount: "all", margin: "0px -20% 0px -20%" }}
+              transition={{ duration: 0.4 }}
+              className="relative flex-shrink-0 w-[85vw] sm:w-[400px] h-[520px] bg-zinc-950 border border-zinc-700 flex flex-col justify-between p-8 group cursor-pointer overflow-hidden transition-colors hover:border-primary-container"
+              onClick={() => window.open(project.githubUrl, "_blank")}
+            >
+              {/* Terminal Window Header Bar */}
+              <div className="absolute top-0 left-0 w-full h-8 border-b border-zinc-700 bg-zinc-900 flex items-center px-4 gap-2">
+                <div className="w-2 h-2 rounded-sm bg-zinc-600 group-hover:bg-primary-container transition-colors" />
+                <div className="w-2 h-2 rounded-sm bg-zinc-600 group-hover:bg-amber-500 transition-colors" />
+                <div className="w-2 h-2 rounded-sm bg-zinc-600 group-hover:bg-emerald-500 transition-colors" />
+                <span className="ml-auto text-[10px] text-zinc-500">{project.index.replace(".", "")}</span>
               </div>
 
-              {/* Title + date */}
-              <div className="lg:col-span-4">
-                <h3 className="font-display text-2xl sm:text-3xl text-zinc-200 group-hover:text-[#e31b23] group-hover:translate-x-1 transition-all duration-200 font-medium">
+              <div className="mt-8">
+                <h3 className="text-2xl font-bold text-zinc-100 group-hover:text-primary-container transition-colors">
                   {project.title}
                 </h3>
-                <span className="font-mono text-[11px] text-zinc-500 block mt-1 tracking-wider uppercase group-hover:text-zinc-400 transition-colors">
-                  {project.role} // {project.dateRange}
-                </span>
-              </div>
+                <div className="text-[10px] text-zinc-500 tracking-widest mt-2">
+                  {project.role}
+                </div>
+                
+                <p className="mt-8 text-sm text-zinc-400 leading-relaxed max-w-[90%] relative z-10">
+                  {project.description}
+                </p>
 
-              {/* Description + tags */}
-              <div className="lg:col-span-5 text-zinc-400 text-sm font-light leading-relaxed">
-                {project.description}
-                <div className="flex flex-wrap gap-2 mt-4 font-mono text-[11px] text-zinc-500">
-                  {project.techTags.map((tag, i) => (
-                    <span
-                      key={i}
-                      className={`border border-transparent hover:border-[#e31b23]/60 hover:text-white hover:bg-[#e31b23]/15 transition-all duration-200 cursor-default px-1.5 py-0.5 rounded ${
-                        i === 0 ? "text-zinc-300" : "text-zinc-400"
-                      }`}
-                    >
+                {/* Tech tags */}
+                <div className="flex gap-3 mt-8 relative z-10">
+                  {project.techTags.slice(0, 2).map((tag, i) => (
+                    <span key={i} className="text-[10px] text-zinc-300">
                       {tag}
                     </span>
                   ))}
+                  {project.techTags.length > 2 && (
+                    <span className="text-[10px] text-zinc-600">
+                      +[ {project.techTags.length - 2} ]
+                    </span>
+                  )}
                 </div>
               </div>
 
-              {/* Link */}
-              <div className="lg:col-span-2 flex lg:justify-end items-center gap-3 pt-2 lg:pt-0">
-                <a
-                  href={project.githubUrl}
-                  onClick={(e) => e.stopPropagation()}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  className="font-mono text-xs tracking-wider text-zinc-400 hover:text-primary-container inline-flex items-center gap-1 group/btn transition-all"
-                  aria-label={`View ${project.title} on GitHub`}
-                >
-                  <span className="group-hover/btn:text-white transition-colors">
-                    inspect
-                  </span>
-                  <span className="text-[14px] group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 group-hover/btn:text-white transition-transform duration-200">
-                    ↗
-                  </span>
-                </a>
+              {/* Action button */}
+              <div className="flex justify-between items-end relative z-10">
+                <span className="text-xs text-primary-container opacity-0 group-hover:opacity-100 transition-opacity">
+                  [{project.dateRange}]
+                </span>
+                <span className="w-10 h-10 border border-zinc-700 flex items-center justify-center group-hover:bg-primary-container group-hover:border-primary-container group-hover:text-black transition-all text-zinc-500">
+                  ↗
+                </span>
               </div>
-            </div>
-          </article>
-        ))}
+            </motion.article>
+          ))}
+        </motion.div>
       </div>
     </section>
   );

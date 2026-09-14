@@ -1,154 +1,108 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useCountUp } from "@/hooks/useScrollReveal";
+import { useRef } from "react";
+import { motion, useTransform, useScroll } from "framer-motion";
 import { hero } from "@/data/portfolio";
 
-function StatCounter({
-  target,
-  label,
-  reducedMotion,
-}: {
-  target: number;
-  label: string;
-  reducedMotion: boolean;
-}) {
-  const ref = useCountUp(target, 1400, !reducedMotion);
-  return (
-    <div className="group cursor-default p-2 -ml-2 rounded hover:bg-zinc-900/40 transition-colors">
-      <div className="text-2xl sm:text-3xl font-mono font-bold text-white tracking-tight group-hover:text-primary-container group-hover:translate-x-0.5 transition-all">
-        <span ref={ref}>{target}+</span>
-      </div>
-      <div className="text-[10px] sm:text-[11px] text-zinc-500 uppercase tracking-widest mt-0.5 group-hover:text-zinc-400">
-        {label}
-      </div>
-    </div>
-  );
-}
-
 export default function Hero() {
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
 
-  useEffect(() => {
-    setReducedMotion(
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    );
-  }, []);
-
-  const scrollToAbout = () => {
-    document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
-  };
+  // Scale the name up slightly as we scroll down (less dramatic than before, fitting a terminal)
+  const nameScale = useTransform(scrollYProgress, [0, 1], [1, 1.5]);
+  // Fade out the content as we scroll down
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   return (
     <section
       id="unveil"
-      className="relative w-full h-screen flex flex-col justify-between p-8 lg:p-14 z-40 bg-background select-none"
+      ref={containerRef}
+      className="relative w-full h-[150vh] bg-background"
       aria-label="Hero — introduction"
     >
-      {/* Top metadata bar */}
-      <div className="flex items-center justify-between font-mono text-[10px] sm:text-[11px] tracking-widest text-zinc-500">
-        <span className="flex items-center gap-2 group cursor-default">
-          <span className="w-1.5 h-1.5 rounded-full bg-primary-container group-hover:scale-125 transition-transform" aria-hidden="true" />
-          <span className="group-hover:text-zinc-300 transition-colors">
-            portfolio // {hero.name.toLowerCase()}
-          </span>
-        </span>
-        <span className="hidden md:inline-block hover:text-zinc-300 transition-colors cursor-default">
-          {hero.location.toLowerCase()}
-        </span>
-        <span className="text-emerald-400 flex items-center gap-1.5 hover:brightness-125 transition-all cursor-default">
-          <span
-            className={`w-1.5 h-1.5 rounded-full bg-emerald-500 ${reducedMotion ? "" : "animate-pulse"}`}
-            aria-hidden="true"
-          />
-          {hero.availability}
-        </span>
-      </div>
+      {/* Sticky container to hold the content while scrolling */}
+      <div className="sticky top-0 w-full h-screen overflow-hidden flex flex-col justify-center px-6 md:px-24">
+        
+        {/* Subtle grid background */}
+        <div 
+          className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" 
+          style={{ backgroundImage: "linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)", backgroundSize: "40px 40px" }}
+        />
 
-      {/* Centerpiece */}
-      <div className="my-auto py-6">
-        {/* Terminal prompt */}
-        <p className="font-mono text-xs sm:text-sm tracking-wider text-zinc-400 mb-5 flex items-center gap-2">
-          <span className="text-primary-container font-semibold">
-            {hero.prompt.split(" ")[0]}
-          </span>
-          <span className="hover:text-white transition-colors">
-            {hero.prompt.split(" ").slice(1).join(" ")}
-          </span>
-          <span className="text-zinc-500">{hero.promptComment}</span>
-        </p>
-
-        {/* Name heading */}
-        <h1 className="font-mono font-bold text-4xl sm:text-6xl md:text-7xl lg:text-[5.8rem] tracking-tight leading-[0.94] text-white flex flex-col items-start select-text">
-          <span className="hover:text-zinc-100 transition-colors">
-            {`> ${hero.name.toLowerCase()}`}
-            <span
-              className={`terminal-cursor text-primary-container ml-2 inline-block ${reducedMotion ? "opacity-100" : ""}`}
-              aria-hidden="true"
-            >
-              _
-            </span>
-          </span>
-        </h1>
-
-        {/* Tagline */}
-        <p className="mt-6 text-zinc-300 text-xs sm:text-sm md:text-base font-mono max-w-2xl leading-relaxed border-l border-zinc-800 hover:border-primary-container pl-4 transition-colors">
-          <span className="text-primary-container font-medium">stdout:</span>{" "}
-          {hero.tagline}
-        </p>
-
-        {/* Stat counters */}
-        <div
-          className="grid grid-cols-3 max-w-lg gap-4 mt-8 pt-6 border-t border-zinc-900"
-          aria-label="Quick stats"
+        {/* Center Content - Terminal Style */}
+        <motion.div 
+          style={{ opacity }} 
+          className="relative z-10 flex flex-col items-start justify-center w-full max-w-6xl mx-auto"
         >
-          {hero.stats.map(({ value, label }) => {
-            const numericValue = parseInt(value.replace("+", ""));
-            return (
-              <StatCounter
-                key={label}
-                target={numericValue}
-                label={label}
-                reducedMotion={reducedMotion}
-              />
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Bottom bar */}
-      <div className="flex items-end justify-between font-mono text-[11px] tracking-widest text-zinc-600">
-        <div className="flex items-center gap-3 group cursor-default">
-          <span className="inline-block w-6 h-[1px] bg-primary-container group-hover:w-10 transition-all duration-300" aria-hidden="true" />
-          <span className="text-zinc-400 group-hover:text-white transition-colors">
-            {hero.school.toLowerCase()}
-          </span>
-        </div>
-
-        {/* Scroll CTA */}
-        <div className="flex flex-col items-center gap-2 cursor-pointer group p-2 transition-transform hover:-translate-y-1 duration-200">
-          <button
-            onClick={scrollToAbout}
-            aria-label="Scroll to about section"
-            className="flex flex-col items-center gap-2"
+          <motion.div 
+            style={{ scale: nameScale, transformOrigin: "left center" }}
+            className="flex flex-col md:flex-row md:items-center gap-4 text-4xl md:text-7xl lg:text-[7vw] font-bold tracking-tight select-none"
           >
-            <span className="text-[10px] tracking-[0.22em] text-zinc-400 group-hover:text-primary-container transition-colors">
-              [ scroll to unveil ]
+            {/* Terminal Prompt Prefix */}
+            <span className="text-primary-container opacity-80">
+              {hero.name}@dev:~$
             </span>
-            <span
-              className={`text-primary-container text-sm ${reducedMotion ? "" : "animate-bounce"} group-hover:scale-125 transition-transform`}
-              aria-hidden="true"
-            >
-              ↓
-            </span>
-          </button>
-        </div>
+            
+            {/* Hero Name & Blinking Cursor */}
+            <div className="flex items-center text-white">
+              <span className="opacity-0">{hero.name}</span> {/* Spacing offset if we wanted to type it, but we'll just show it */}
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5, duration: 0.1 }}
+                className="ml-2 md:ml-6"
+              >
+                {hero.name}
+              </motion.span>
+              <motion.span
+                animate={{ opacity: [1, 0] }}
+                transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+                className="ml-2 md:ml-4 text-primary-container"
+              >
+                █
+              </motion.span>
+            </div>
+          </motion.div>
+          
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 1, ease: "easeOut" }}
+            className="text-sm md:text-base text-zinc-400 tracking-wider mt-12 pl-1 md:pl-2"
+          >
+            {hero.role} &amp; cs student
+          </motion.p>
+        </motion.div>
 
-        <div className="hidden sm:block text-right">
-          <span className="hover:text-zinc-400 transition-colors cursor-default">
-            terminal status: ready
-          </span>
-        </div>
+        {/* Bottom Metadata & Scroll Indicator */}
+        <motion.div 
+          style={{ opacity }}
+          className="absolute bottom-8 left-0 w-full px-8 md:px-12 flex justify-between items-end z-10 text-xs text-zinc-500 tracking-widest"
+        >
+          {/* Left: Scroll Cue */}
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-[10px]">scroll</span>
+            <motion.div 
+              animate={{ height: ["0px", "24px", "0px"], opacity: [0, 1, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              className="w-[1px] bg-primary-container"
+            />
+          </div>
+
+          {/* Right: Availability */}
+          <div className="flex items-center gap-2 text-emerald-500 text-[10px]">
+            <motion.span 
+              animate={{ opacity: [0.4, 1, 0.4] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              className="w-1.5 h-1.5 rounded-sm bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" 
+            />
+            {hero.availability.split(" & ")[0]}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

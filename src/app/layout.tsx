@@ -1,20 +1,18 @@
 import type { Metadata } from "next";
-import { spaceGrotesk, jetbrainsMono, inter } from "@/lib/fonts";
+import { jetbrainsMono, inter } from "@/lib/fonts";
 import { jsonLdPerson, SITE_URL } from "@/data/portfolio";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Lawrenz Matthew Garcia — Backend / AI Engineer",
+    default: "Lawrenz Matthew Garcia — Full-Stack Developer",
     template: "%s | Lawrenz Matthew Garcia",
   },
   description:
-    "Portfolio of Lawrenz Matthew Garcia — 3rd-year CS student at PUP and backend AI engineer specializing in microservices, ML pipelines, and cross-platform systems.",
+    "Portfolio of Lawrenz Matthew Garcia — 3rd-year CS student at PUP and a Full-Stack Developer, leveraging AI tools to create useful websites and cross-platform apps",
   keywords: [
     "Lawrenz Matthew Garcia",
-    "backend engineer",
-    "AI engineer",
     "full-stack",
     "React",
     "Next.js",
@@ -29,7 +27,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_PH",
     url: SITE_URL,
-    siteName: "Lawrenz Matthew Garcia",
+    siteName: "scarecrowdevz",
     title: "Lawrenz Matthew Garcia — Backend / AI Engineer",
     description:
       "Portfolio of Lawrenz Matthew Garcia — 3rd-year CS student at PUP and backend AI engineer. Microservices, ML pipelines, cross-platform systems.",
@@ -73,7 +71,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark scroll-smooth ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${inter.variable}`}
+      className={`dark scroll-smooth ${jetbrainsMono.variable} ${inter.variable}`}
     >
       <head>
         <script

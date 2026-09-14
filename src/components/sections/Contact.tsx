@@ -2,139 +2,98 @@
 
 import { useState } from "react";
 import { contact } from "@/data/portfolio";
+import TextReveal from "@/components/ui/TextReveal";
+import { motion } from "framer-motion";
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
 
-  const copyEmail = async () => {
+  const copyEmail = async (e: React.MouseEvent) => {
+    e.preventDefault();
     try {
       await navigator.clipboard.writeText(contact.email);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2200);
+      setTimeout(() => setCopied(false), 2000);
+      window.location.href = `mailto:${contact.email}`;
     } catch {
-      // Fallback: select text approach
+      window.location.href = `mailto:${contact.email}`;
     }
   };
 
   return (
     <section
       id="contact"
-      className="py-24 lg:py-32"
+      className="relative min-h-screen flex flex-col justify-center items-start px-6 md:px-24"
       aria-labelledby="contact-heading"
     >
-      <div className="max-w-3xl">
-        {/* Section label */}
-        <div className="font-mono text-xs tracking-[0.22em] text-primary-container uppercase mb-3 group inline-flex items-center gap-1 cursor-default">
-          <span className="text-zinc-500 group-hover:text-primary-container transition-colors">
-            $
-          </span>
-          <span className="group-hover:text-white transition-colors">
+      <div className="w-full max-w-4xl">
+        <h2 id="contact-heading" className="sr-only">contact</h2>
+        
+        <TextReveal>
+          <div className="text-xl md:text-3xl font-bold tracking-tight text-white mb-6">
+            <span className="text-primary-container font-normal opacity-80 mr-4">
+              renz@dev:~$
+            </span>
             ./transmit_contact.sh
-          </span>
-          <span className="text-zinc-600">[07/07]</span>
-          <span className="opacity-0 group-hover:opacity-100 transition-opacity text-primary-container ml-1 font-bold">
-            {">_"}
-          </span>
-        </div>
+          </div>
+        </TextReveal>
 
-        {/* Headline */}
-        <h2
-          id="contact-heading"
-          className="font-mono text-3xl sm:text-4xl lg:text-5xl font-semibold text-white leading-tight tracking-tight"
-        >
-          {">"} have a project in mind?
-          <br />
-          <span className="text-zinc-400 font-normal">
-            let&apos;s engineer something resilient.
-          </span>
-          <span
-            className="terminal-cursor text-primary-container ml-2"
-            aria-hidden="true"
-          >
-            _
-          </span>
-        </h2>
+        <TextReveal delay={0.2}>
+          <p className="text-sm md:text-base text-zinc-400 mb-8 max-w-xl">
+            initializing secure channel. waiting for incoming transmission.
+            click to copy address or open default client.
+          </p>
+        </TextReveal>
 
-        <p className="text-zinc-400 text-sm sm:text-base font-light mt-6 leading-relaxed">
-          open to software engineering internships, backend &amp; ai developer
-          roles, and full-stack collaboration. transmit your query directly
-          below.
-        </p>
-
-        {/* Email + copy */}
-        <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        {/* Terminal Style Email CTA */}
+        <TextReveal delay={0.4}>
           <a
             href={`mailto:${contact.email}`}
-            className="font-display text-xl sm:text-2xl md:text-3xl text-zinc-200 hover:text-primary-container transition-colors tracking-tight underline decoration-primary-container/40 underline-offset-8 group"
-            aria-label={`Send email to ${contact.email}`}
-          >
-            {contact.email}
-          </a>
-          <button
-            id="copyBtn"
             onClick={copyEmail}
-            aria-label="Copy email address to clipboard"
-            className={`font-mono text-[11px] tracking-wider uppercase border px-3 py-1.5 transition-all active:scale-95 duration-150 ${
-              copied
-                ? "text-white border-primary-container bg-primary-container/20"
-                : "text-zinc-400 border-zinc-800 hover:text-white hover:border-white"
-            }`}
+            className="group flex items-center gap-4 p-4 border border-zinc-800 bg-zinc-950 hover:border-primary-container transition-colors duration-300 w-fit"
+            title="click to copy & email"
           >
-            {copied ? "copied to clipboard" : "copy address"}
-          </button>
-        </div>
-
-        {/* Metadata grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 pt-6 border-t border-zinc-900 font-mono text-xs text-zinc-400">
-          <div className="hover:text-zinc-200 transition-colors">
-            <span className="text-zinc-600">// phone:</span>{" "}
-            <a
-              href={`tel:${contact.phone.replace(/\s/g, "")}`}
-              className="hover:text-white hover:underline transition-colors"
+            <span className="text-primary-container opacity-80">{">"}</span>
+            <span className="text-lg md:text-xl text-zinc-300 group-hover:text-white transition-colors">
+              {contact.email}
+            </span>
+            <motion.span
+              animate={{ opacity: [1, 0] }}
+              transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+              className="text-primary-container"
             >
-              {contact.phone}
-            </a>
-          </div>
-          <div className="hover:text-zinc-200 transition-colors">
-            <span className="text-zinc-600">// location:</span>{" "}
-            {contact.location}
-          </div>
-        </div>
+              █
+            </motion.span>
+          </a>
+        </TextReveal>
 
-        {/* CTA buttons */}
-        <div className="mt-8 flex flex-wrap items-center gap-4">
-          <a
-            href={contact.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-mono text-xs tracking-wider uppercase bg-primary-container text-white px-5 py-2.5 hover:bg-red-700 hover:shadow-[0_0_16px_rgba(227,27,35,0.4)] transition-all duration-200 inline-flex items-center gap-2 group active:scale-95"
-          >
-            <span>github repos</span>
-            <span className="group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform duration-200">
-              →
-            </span>
+        {/* Copy Feedback */}
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: copied ? 1 : 0, y: copied ? 0 : -10 }}
+          className="h-8 mt-4 text-xs text-primary-container tracking-widest pointer-events-none"
+        >
+          [stdout]: copied to clipboard. opening mail client...
+        </motion.div>
+
+        {/* Icon-only links */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.6, duration: 1 }}
+          className="mt-16 flex items-center gap-8 md:gap-12"
+        >
+          <a href={contact.github} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-white transition-colors flex items-center gap-2" title="github">
+            <span>[ github ]</span>
           </a>
-          <a
-            href={contact.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-mono text-xs tracking-wider uppercase border border-zinc-800 px-5 py-2.5 text-zinc-300 hover:border-zinc-500 hover:text-white hover:shadow-[0_0_12px_rgba(255,255,255,0.1)] transition-all duration-200 active:scale-95 inline-flex items-center gap-1.5 group"
-          >
-            <span>linkedin profile</span>
-            <span className="text-[13px] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all">
-              ↗
-            </span>
+          <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-white transition-colors flex items-center gap-2" title="linkedin">
+            <span>[ linkedin ]</span>
           </a>
-          {/* CV Download */}
-          <a
-            href="/cv/lawrenz-garcia-cv.pdf"
-            download="Lawrenz-Matthew-Garcia-CV.pdf"
-            className="font-mono text-xs tracking-wider uppercase border border-zinc-800 px-5 py-2.5 text-zinc-300 hover:border-primary-container/60 hover:text-white transition-all duration-200 active:scale-95 inline-flex items-center gap-1.5"
-            aria-label="Download CV"
-          >
-            ↓ download cv
+          <a href="/cv/lawrenz-garcia-cv.pdf" download="Lawrenz-Matthew-Garcia-CV.pdf" className="text-zinc-500 hover:text-white transition-colors flex items-center gap-2" title="download cv">
+            <span>[ fetch cv ]</span>
           </a>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

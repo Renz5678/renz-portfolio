@@ -1,99 +1,83 @@
+"use client";
+
+import { motion, Variants } from "framer-motion";
 import { achievements, education } from "@/data/portfolio";
 
 export default function AchievementsEducation() {
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { duration: 0.5, ease: "easeOut" }
+    }
+  };
+
   return (
     <section
       id="honors"
-      className="py-24 lg:py-32 hairline-b"
+      className="py-32 lg:py-48 min-h-screen flex items-center"
       aria-labelledby="honors-heading"
     >
-      {/* Section label */}
-      <div className="font-mono text-xs tracking-[0.22em] text-primary-container uppercase mb-8 group inline-flex items-center gap-1 cursor-default">
-        <span className="text-zinc-500 group-hover:text-primary-container transition-colors">
-          $
-        </span>
-        <span className="group-hover:text-white transition-colors">
-          {"cat achievements.log && cat education.txt"}
-        </span>
-        <span className="text-zinc-600">[06/07]</span>
-        <span className="opacity-0 group-hover:opacity-100 transition-opacity text-primary-container ml-1 font-bold">
-          {">_"}
-        </span>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-        {/* Achievements */}
-        <div className="lg:col-span-6 reveal-item">
-          <h2
-            id="honors-heading"
-            className="font-mono text-xl sm:text-2xl font-semibold text-white uppercase mb-8 flex items-center gap-2"
-          >
-            <span className="text-primary-container">#</span>
-            achievements &amp; honors
-          </h2>
-          <div className="space-y-6">
-            {achievements.map((achievement, index) => (
-              <div
-                key={index}
-                className="border-l border-zinc-800 pl-4 py-1.5 hover:border-primary-container hover:bg-neutral-900/30 transition-all duration-200 rounded-r group"
-              >
-                <div className="text-sm font-mono text-white font-medium group-hover:text-primary transition-colors">
-                  {achievement.title}
-                </div>
-                <div className="text-xs font-mono text-zinc-400 mt-0.5">
-                  {achievement.institution}
-                </div>
-                <p className="text-xs text-zinc-500 mt-1 font-mono group-hover:text-zinc-400 transition-colors">
-                  {achievement.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Education */}
-        <div className="lg:col-span-6 reveal-item">
-          <h2 className="font-mono text-xl sm:text-2xl font-semibold text-white uppercase mb-8 flex items-center gap-2">
-            <span className="text-primary-container">#</span>
-            education
-          </h2>
-          <div className="border border-zinc-900 bg-zinc-950/40 p-6 hover:border-neutral-700 hover:bg-neutral-900/40 hover:-translate-y-0.5 transition-all duration-300 rounded group">
-            <div className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest group-hover:text-zinc-400 transition-colors">
-              // tertiary degree
-            </div>
-            <h3 className="font-display text-xl text-white font-medium mt-1 group-hover:text-primary transition-colors">
-              {education.institution}
-            </h3>
-            <div className="font-mono text-xs text-zinc-300 mt-1">
-              {education.location}
-            </div>
-            <div className="font-mono text-sm text-primary-container mt-3 font-medium">
-              {education.degree}
-            </div>
-            <div className="text-xs font-mono text-zinc-400 mt-1">
-              expected graduation: {education.expectedGrad} ({education.year})
-            </div>
-
-            {/* Honors */}
-            <div className="mt-6 pt-5 border-t border-zinc-900 group-hover:border-zinc-800 transition-colors">
-              <span className="font-mono text-[10px] text-zinc-500 uppercase tracking-wider block mb-2">
-                academic honors
+      <div className="w-full max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
+        
+        {/* Achievements Card */}
+        <motion.div
+          variants={cardVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          className="bg-zinc-950 border border-zinc-900 p-8 lg:p-12 flex flex-col justify-between h-full"
+        >
+          <div>
+            <h2 id="honors-heading" className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-8">
+              <span className="text-primary-container block mb-2 text-lg font-normal opacity-80">
+                renz@dev:~$ cat honors.txt
               </span>
-              {education.honors.map((honor, i) => (
-                <div
-                  key={i}
-                  className="inline-flex items-center gap-2 text-xs font-mono bg-zinc-900/80 border border-zinc-800 px-3 py-1.5 text-zinc-300 hover:border-primary-container hover:text-white transition-all duration-200 cursor-default"
-                >
-                  <span
-                    className="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"
-                    aria-hidden="true"
-                  />
-                  <span>{honor}</span>
+              honors
+            </h2>
+            <div className="flex flex-col gap-4">
+              {achievements.map((item, i) => (
+                <div key={i} className="inline-flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary-container" />
+                  <span className="font-mono text-sm text-zinc-300 uppercase tracking-wider">{item.title}</span>
                 </div>
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
+
+        {/* Education Card */}
+        <motion.div
+          variants={cardVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ delay: 0.1 }} // Staggered entry
+          className="bg-zinc-950 border border-zinc-900 p-8 lg:p-12 flex flex-col justify-between h-full"
+        >
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-8">
+              education
+            </h2>
+            <h3 className="text-xl md:text-2xl text-zinc-100 mb-2">
+              {education.institution}
+            </h3>
+            <p className="font-mono text-xs text-zinc-400 uppercase tracking-widest">
+              {education.degree} // {education.expectedGrad}
+            </p>
+          </div>
+          
+          <div className="mt-12">
+            {education.honors.map((honor, i) => (
+              <span key={i} className="inline-flex items-center gap-2 font-mono text-[10px] text-zinc-400 border border-zinc-800 px-3 py-1.5 uppercase tracking-widest">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse" />
+                {honor}
+              </span>
+            ))}
+          </div>
+        </motion.div>
+
       </div>
     </section>
   );

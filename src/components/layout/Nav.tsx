@@ -1,90 +1,98 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { navLinks, contact } from "@/data/portfolio";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useActiveSection } from "@/hooks/useActiveSection";
 
+const navItems = [
+  { name: "01. intro", id: "about" },
+  { name: "02. works", id: "works" },
+  { name: "03. stack", id: "capabilities" },
+  { name: "04. path", id: "trajectory" },
+  { name: "05. honors", id: "honors" },
+  { name: "06. contact", id: "contact" },
+];
+
 export default function Nav() {
-  const [visible, setVisible] = useState(false);
-  const active = useActiveSection();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const activeSection = useActiveSection([
+    "unveil",
+    "about",
+    "works",
+    "capabilities",
+    "trajectory",
+    "honors",
+    "contact",
+  ]);
 
   useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      const vh = window.innerHeight;
-      setVisible(y > vh * 0.35);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  return (
-    <header
-      className={`fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-[#050505]/85 border-b border-white/[0.06] transition-all duration-500 ${
-        visible
-          ? "opacity-100 translate-y-0 pointer-events-auto"
-          : "opacity-0 -translate-y-4 pointer-events-none"
-      }`}
-      aria-label="Site navigation"
-    >
-      <div className="max-w-8xl mx-auto px-6 lg:px-12 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <a
-          href="#unveil"
-          onClick={(e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-          className="flex items-center gap-2 group font-mono text-xs tracking-wider"
-          aria-label="Back to top"
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-primary-container group-hover:scale-125 transition-transform" />
-          <span className="text-on-surface font-medium group-hover:text-primary transition-colors">
-            lawrenz
-          </span>
-          <span className="text-zinc-500">/ backend-ai</span>
-        </a>
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
 
-        {/* Nav links */}
-        <nav
-          className="hidden md:flex items-center gap-7 font-mono text-[11px] tracking-widest text-zinc-400"
-          aria-label="Sections"
+  return (
+    <motion.header
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+        isScrolled ? "bg-background/60 backdrop-blur-md border-b border-white/5 py-4" : "bg-transparent py-8"
+      }`}
+    >
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 flex justify-between items-center">
+        {/* Logo / Handle */}
+        <div 
+          onClick={() => scrollTo("unveil")}
+          className="font-mono text-xs text-white tracking-widest uppercase cursor-pointer hover:text-primary-container transition-colors group flex items-center gap-2"
         >
-          {navLinks.map(({ label, href }) => {
-            const sectionId = href.replace("#", "");
-            const isActive = active === sectionId;
+          <span className="w-1.5 h-1.5 rounded-full bg-primary-container" />
+          renz.
+        </div>
+
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex gap-8">
+          {navItems.map((item) => {
+            const isActive = activeSection === item.id;
             return (
-              <a
-                key={href}
-                href={href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  document
-                    .getElementById(sectionId)
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className={`pb-0.5 transition-all duration-200 ${
-                  isActive
-                    ? "text-white border-b border-primary-container"
-                    : "hover:text-white hover:border-b hover:border-primary-container"
-                }`}
+              <button
+                key={item.id}
+                onClick={() => scrollTo(item.id)}
+                className={`font-mono text-[10px] uppercase tracking-widest transition-all duration-300 relative group
+                  ${isActive ? "text-white" : "text-zinc-500 hover:text-zinc-300"}
+                `}
               >
-                {label}
-              </a>
+                {item.name}
+                <AnimatePresence>
+                  {isActive && (
+                    <motion.div
+                      layoutId="nav-indicator"
+                      className="absolute -bottom-2 left-0 w-full h-[1px] bg-primary-container"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    />
+                  )}
+                </AnimatePresence>
+              </button>
             );
           })}
         </nav>
 
-        {/* CTA */}
-        <a
-          href={`mailto:${contact.email}`}
-          className="font-mono text-[11px] tracking-widest text-primary-container border border-primary-container/30 px-3 py-1.5 hover:bg-primary-container hover:text-white hover:shadow-[0_0_12px_rgba(227,27,35,0.4)] transition-all duration-200 active:scale-95"
-          aria-label="Send email"
+        {/* Let's Talk CTA */}
+        <button 
+          onClick={() => scrollTo("contact")}
+          className="hidden sm:block font-mono text-[10px] uppercase tracking-widest px-4 py-2 border border-zinc-800 text-zinc-300 hover:border-primary-container hover:text-white transition-all rounded-sm"
         >
           [ talk ]
-        </a>
+        </button>
       </div>
-    </header>
+    </motion.header>
   );
 }

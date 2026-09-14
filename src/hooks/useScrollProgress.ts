@@ -9,7 +9,7 @@ import { RefObject } from "react";
  */
 export function useScrollProgress(
   containerRef?: RefObject<HTMLElement | null>,
-  options?: { offset?: [string, string] }
+  options?: { offset?: any }
 ): { scrollYProgress: MotionValue<number>; smoothProgress: MotionValue<number> } {
   const { scrollYProgress } = useScroll(
     containerRef

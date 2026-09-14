@@ -1,86 +1,104 @@
-import { experience } from "@/data/portfolio";
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { experience, leadership } from "@/data/portfolio";
+import TextReveal from "@/components/ui/TextReveal";
 
 export default function Experience() {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+
   return (
     <section
       id="trajectory"
-      className="py-24 lg:py-32 hairline-b"
+      className="py-32 lg:py-48 min-h-screen relative"
       aria-labelledby="trajectory-heading"
     >
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-4">
-        <div>
-          <div className="font-mono text-xs tracking-[0.22em] text-primary-container uppercase mb-2 group inline-flex items-center gap-1 cursor-default">
-            <span className="text-zinc-500 group-hover:text-primary-container transition-colors">
-              $
+      <div className="max-w-4xl mx-auto px-6">
+        <TextReveal>
+          <h2 id="trajectory-heading" className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-24">
+            <span className="text-primary-container block mb-2 text-lg font-normal opacity-80">
+              renz@dev:~$ cat timeline.log
             </span>
-            <span className="group-hover:text-white transition-colors">
-              git log --trajectory
-            </span>
-            <span className="text-zinc-600">[04/07]</span>
-            <span className="opacity-0 group-hover:opacity-100 transition-opacity text-primary-container ml-1 font-bold">
-              {">_"}
-            </span>
-          </div>
-          <h2
-            id="trajectory-heading"
-            className="font-mono text-2xl sm:text-3xl font-semibold tracking-tight text-white uppercase"
-          >
-            <span className="text-primary-container font-mono mr-2">#</span>
-            experience &amp; fellowships
+            trajectory
           </h2>
-        </div>
-        <div className="font-mono text-xs text-zinc-500 hover:text-zinc-400 transition-colors cursor-default">
-          [ verified engineering roles ]
-        </div>
-      </div>
+        </TextReveal>
 
-      {/* Global placeholder notice */}
-      <div className="mb-10 p-4 border border-dashed border-yellow-600/40 bg-yellow-900/10 rounded font-mono text-xs text-yellow-500/80">
-        <span className="font-bold text-yellow-400">[⚠ PLACEHOLDER]</span> —
-        experience entries below are marked as TODO. replace with final
-        confirmed roles before publishing.
-      </div>
-
-      <div className="space-y-16">
-        {experience.map((entry, index) => (
-          <div
-            key={index}
-            className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 reveal-item p-4 -m-4 rounded border border-transparent hover:border-neutral-700 hover:bg-neutral-900/40 hover:-translate-y-0.5 transition-all duration-300"
-          >
-            {/* Placeholder badge overlay */}
-            {entry.isPlaceholder && (
-              <div className="absolute top-4 right-4 px-2 py-0.5 text-[9px] font-mono tracking-widest uppercase border border-yellow-600/50 text-yellow-500 bg-yellow-900/20 z-10">
-                [TODO]
-              </div>
-            )}
-
-            {/* Left — date / meta */}
-            <div className="lg:col-span-3 font-mono text-xs text-zinc-500 pt-1">
-              <div className={entry.isActive ? "text-white font-medium" : "text-zinc-300"}>
-                {entry.dateRange}
-              </div>
-              <div className="text-zinc-600 mt-0.5">{entry.meta}</div>
-              {entry.isActive && (
-                <div className="inline-block mt-3 px-2 py-0.5 text-[10px] tracking-wider uppercase border border-primary-container/40 text-primary-container active-badge-pulse hover:border-primary-container transition-all cursor-default">
-                  active tenure
-                </div>
+        <div className="relative border-l border-zinc-800/80 ml-2 md:ml-0 pl-8 md:pl-12">
+          {experience.map((entry, idx) => (
+            <motion.div 
+              key={idx}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: idx * 0.15, duration: 0.5 }}
+              className="relative mb-12 last:mb-0 group cursor-default"
+              onMouseEnter={() => setHoveredIdx(idx)}
+              onMouseLeave={() => setHoveredIdx(null)}
+            >
+              {/* Timeline dot */}
+              <div className="absolute -left-[37px] md:-left-[53px] top-2 w-2 h-2 rounded-full bg-zinc-700 group-hover:bg-primary-container transition-colors duration-300" />
+              
+              {/* Amber placeholder dot if needed */}
+              {entry.isPlaceholder && (
+                <div className="absolute -left-[50px] md:-left-[66px] top-1.5 w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" title="Placeholder Data" />
               )}
-            </div>
 
-            {/* Right — role details */}
-            <div className="lg:col-span-9 pl-0 lg:pl-10 border-l-0 lg:border-l border-zinc-800">
-              <h3 className="font-display text-2xl text-white font-medium hover:text-primary transition-colors">
-                {entry.company}
-              </h3>
-              <div className="font-mono text-xs text-zinc-400 mt-1 mb-4">
+              <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-2">
+                <h3 className="font-display text-2xl md:text-3xl text-zinc-100 group-hover:text-white transition-colors">
+                  {entry.company}
+                </h3>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 whitespace-nowrap">
+                  {entry.dateRange}
+                </span>
+              </div>
+              
+              <div className="font-mono text-xs text-zinc-400 mt-2 uppercase tracking-wider group-hover:text-primary-container transition-colors">
                 {entry.role}
               </div>
-              <p className="text-zinc-400 text-sm sm:text-base font-light leading-relaxed max-w-3xl">
-                {entry.description}
-              </p>
-            </div>
-          </div>
-        ))}
+
+              {/* Expandable Description */}
+              <AnimatePresence>
+                {(hoveredIdx === idx) && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
+                  >
+                    <p className="mt-4 text-sm text-zinc-400 font-light max-w-2xl leading-relaxed">
+                      {/* Truncate to first sentence for minimalism */}
+                      {entry.description.split(". ")[0]}.
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+
+          {/* Leadership merged as inline tags */}
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="relative mt-24 pt-12 border-t border-zinc-900"
+          >
+             <div className="absolute -left-[37px] md:-left-[53px] top-14 w-2 h-2 rounded-full bg-zinc-800" />
+             <div className="text-[10px] text-zinc-500 tracking-widest mb-6">
+               leadership &amp; community
+             </div>
+             <div className="flex flex-wrap gap-4">
+               {leadership.map((item, i) => (
+                 <span key={i} className="font-mono text-xs text-zinc-400 border border-zinc-800 px-3 py-1.5 hover:text-white hover:border-zinc-500 transition-colors cursor-default">
+                   {item.org}
+                 </span>
+               ))}
+             </div>
+          </motion.div>
+
+        </div>
       </div>
     </section>
   );

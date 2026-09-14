@@ -6,7 +6,6 @@ import About from "@/components/sections/About";
 import Projects from "@/components/sections/Projects";
 import TechStack from "@/components/sections/TechStack";
 import Experience from "@/components/sections/Experience";
-import Leadership from "@/components/sections/Leadership";
 import AchievementsEducation from "@/components/sections/AchievementsEducation";
 import Contact from "@/components/sections/Contact";
 import ScrollRevealInit from "@/components/ScrollRevealInit";
@@ -32,7 +31,6 @@ export default function Home() {
         <Projects />
         <TechStack />
         <Experience />
-        <Leadership />
         <AchievementsEducation />
         <Contact />
       </main>
