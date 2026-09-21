@@ -31,6 +31,9 @@ const CMD          = `ping ${HOST}`;
 const TYPING_MS    = 50;    // ms per character while typing the command
 const PING_GAP_MS  = 650;   // delay between each icmp_seq line
 
+// Breakpoint below which we use shortened line text so nothing clips off-screen
+const MOBILE_BP = 480;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────────────────────────────────────
@@ -109,6 +112,9 @@ export default function PingIntro() {
     const mdev    = (Math.random() * 0.13 + 0.02).toFixed(3);
     const elapsed = Math.floor(Math.random() * 200 + 2850);
 
+    // On narrow screens, use condensed strings so nothing overflows
+    const isMobile = typeof window !== "undefined" && window.innerWidth < MOBILE_BP;
+
     let nextId = 0;
     const push = (fn: () => void, ms: number) => {
       timers.current.push(setTimeout(fn, ms));
@@ -145,7 +151,12 @@ export default function PingIntro() {
     // 4. icmp responses
     for (let seq = 0; seq < 4; seq++) {
       push(
-        () => addLine("ping", `64 bytes from ${IP}: icmp_seq=${seq} ttl=64 time=${pt[seq]} ms`),
+        () => addLine(
+          "ping",
+          isMobile
+            ? `64 bytes: icmp_seq=${seq} ttl=64 time=${pt[seq]} ms`
+            : `64 bytes from ${IP}: icmp_seq=${seq} ttl=64 time=${pt[seq]} ms`
+        ),
         afterCmd + 260 + seq * PING_GAP_MS
       );
     }
@@ -155,11 +166,11 @@ export default function PingIntro() {
     // 5. ^C
     push(() => addLine("interrupt", "^C"), afterPings + 350);
 
-    // 6. Statistics block (indented 4 spaces)
-    push(() => addLine("gap",         ""),                                                                          afterPings + 500);
-    push(() => addLine("stat-header", `--- ${HOST} ping statistics ---`),                                          afterPings + 580);
-    push(() => addLine("stat",        `    4 packets transmitted, 4 received, 0% packet loss, time ${elapsed}ms`), afterPings + 750);
-    push(() => addLine("rtt",         `    rtt min/avg/max/mdev = ${min}/${avg}/${max}/${mdev} ms`),               afterPings + 920);
+    // 6. Statistics block
+    push(() => addLine("gap",         ""),                                                                                    afterPings + 500);
+    push(() => addLine("stat-header", `--- ${isMobile ? HOST.split(".")[0] : HOST} ping statistics ---`),                    afterPings + 580);
+    push(() => addLine("stat",        `4 packets tx, 4 rx, 0% loss, time ${elapsed}ms`),                                    afterPings + 750);
+    push(() => addLine("rtt",         `rtt min/avg/max/mdev = ${min}/${avg}/${max}/${mdev} ms`),                             afterPings + 920);
 
     // 7. Success
     push(() => addLine("gap",     ""),                       afterPings + 1100);
@@ -203,20 +214,22 @@ export default function PingIntro() {
             }}
           />
 
-          {/* Terminal content — starts top-left, no wrapping */}
-          <div className="relative z-10 pt-[14vh] px-6 md:px-12 w-full font-mono text-[12.5px] md:text-[13.5px] leading-[1.6] tracking-normal">
+          {/* Terminal content */}
+          <div className="relative z-10 pt-[14vh] px-5 md:px-12 w-full font-mono text-[11px] sm:text-[12.5px] md:text-[13.5px] leading-[1.6] tracking-normal">
 
             {/* ── Command prompt line ── */}
             {promptReady && (
-              <div className="flex items-center gap-[0.5ch] whitespace-nowrap">
-                <span className="text-zinc-500 select-none">C:\Users\scarecrow&gt;</span>
-                <span className="text-white">{typedCmd}</span>
+              <div className="flex items-center gap-[0.5ch] min-w-0">
+                {/* Shorten the prompt prefix on very small screens */}
+                <span className="text-zinc-500 select-none shrink-0 hidden sm:inline">C:\Users\scarecrow&gt;</span>
+                <span className="text-zinc-500 select-none shrink-0 sm:hidden">C:\scarecrow&gt;</span>
+                <span className="text-white truncate">{typedCmd}</span>
                 {/* Blinking block cursor while typing */}
                 {!cmdDone && (
                   <motion.span
                     animate={{ opacity: [1, 0] }}
                     transition={{ repeat: Infinity, duration: 0.55, ease: "linear" }}
-                    className="inline-block w-[8px] h-[13px] bg-white align-middle translate-y-[1px]"
+                    className="inline-block w-[8px] h-[13px] bg-white align-middle translate-y-[1px] shrink-0"
                   />
                 )}
               </div>
@@ -234,7 +247,8 @@ export default function PingIntro() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.07 }}
-                  className={`whitespace-nowrap ${VARIANT_CLASS[line.variant]}`}
+                  // Allow wrapping on mobile; keep nowrap on larger screens
+                  className={`break-all sm:whitespace-nowrap ${VARIANT_CLASS[line.variant]}`}
                 >
                   {line.text}
 

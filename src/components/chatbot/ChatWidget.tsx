@@ -8,7 +8,8 @@
  * Keyboard shortcut: Ctrl+/ (or Cmd+/ on Mac) toggles the panel.
  *
  * Unread dot: shows a pulsing red dot on the button if the panel has never
- * been opened this session (the greeting message is "unread").
+ * been opened this session. The panel never auto-opens — the dot is a
+ * passive nudge only.
  */
 
 import { useState, useEffect } from "react";
@@ -21,20 +22,10 @@ export default function ChatWidget() {
   const [open, setOpen]           = useState(false);
   const [hasUnread, setHasUnread] = useState(false);
 
-  // Auto-open + show unread dot on first visit (before the user has ever opened the chat).
-  // Once the panel is opened (manually or via this effect), OPENED_KEY is written so
-  // subsequent page loads / refreshes leave the chat closed.
+  // Show unread dot on first visit — panel stays closed until manually opened.
   useEffect(() => {
     if (!sessionStorage.getItem(OPENED_KEY)) {
       setHasUnread(true);
-      // Slight delay so the page has finished its entrance animations before the
-      // chat panel pops in — prevents competing motion on first paint.
-      const t = setTimeout(() => {
-        setOpen(true);
-        setHasUnread(false);
-        sessionStorage.setItem(OPENED_KEY, "1");
-      }, 1200);
-      return () => clearTimeout(t);
     }
   }, []);
 
