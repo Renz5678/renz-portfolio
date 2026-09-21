@@ -6,7 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "scarecrow — full-stack developer",
+    default: "Lawrenz Matthew Garcia",
     template: "%s | scarecrow",
   },
   description:
