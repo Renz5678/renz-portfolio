@@ -9,15 +9,31 @@ import Experience from "@/components/sections/Experience";
 import AchievementsEducation from "@/components/sections/AchievementsEducation";
 import Contact from "@/components/sections/Contact";
 import ScrollRevealInit from "@/components/ScrollRevealInit";
+import EasterEggs from "@/components/EasterEggs";
+import MatrixWipe from "@/components/canvas/MatrixWipe";
+import PingIntro from "@/components/canvas/PingIntro";
+import ChatWidget from "@/components/chatbot/ChatWidget";
 
 export default function Home() {
   return (
     <>
+      {/* Ping terminal boot screen — plays once per session */}
+      <PingIntro />
+
+      {/* Matrix rain wipe — fires on each nav section click */}
+      <MatrixWipe />
+
       {/* Custom cursor (client, fine-pointer only) */}
       <CustomCursor />
 
       {/* Scroll-reveal IntersectionObserver init (client, no DOM output) */}
       <ScrollRevealInit />
+
+      {/* Easter eggs — all hidden interaction triggers */}
+      <EasterEggs />
+
+      {/* Intent-based chatbot — floating bottom-right, Ctrl+/ shortcut */}
+      <ChatWidget />
 
       {/* Persistent navigation */}
       <Nav />

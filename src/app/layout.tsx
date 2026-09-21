@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { jetbrainsMono, inter } from "@/lib/fonts";
+import { spaceGrotesk, jetbrainsMono, inter } from "@/lib/fonts";
 import { jsonLdPerson, SITE_URL } from "@/data/portfolio";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Lawrenz Matthew Garcia — Full-Stack Developer",
-    template: "%s | Lawrenz Matthew Garcia",
+    default: "scarecrow — full-stack developer",
+    template: "%s | scarecrow",
   },
   description:
     "Portfolio of Lawrenz Matthew Garcia — 3rd-year CS student at PUP and a Full-Stack Developer, leveraging AI tools to create useful websites and cross-platform apps",
@@ -27,8 +27,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_PH",
     url: SITE_URL,
-    siteName: "scarecrowdevz",
-    title: "Lawrenz Matthew Garcia — Backend / AI Engineer",
+    siteName: "scarecrow",
+    title: "scarecrow — backend / ai engineer",
     description:
       "Portfolio of Lawrenz Matthew Garcia — 3rd-year CS student at PUP and backend AI engineer. Microservices, ML pipelines, cross-platform systems.",
     images: [
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lawrenz Matthew Garcia — Backend / AI Engineer",
+    title: "scarecrow — backend / ai engineer",
     description:
       "Portfolio of Lawrenz Matthew Garcia — Backend AI Engineer & CS Student at PUP.",
     images: ["/og-image.png"],
@@ -71,7 +71,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark scroll-smooth ${jetbrainsMono.variable} ${inter.variable}`}
+      className={`dark scroll-smooth ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${inter.variable}`}
     >
       <head>
         <script
@@ -79,7 +79,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdPerson) }}
         />
       </head>
-      <body className="bg-background text-on-surface antialiased font-mono lowercase relative overflow-x-hidden">
+      <body className="bg-bg text-fg antialiased font-sans lowercase relative overflow-x-hidden">
         {children}
       </body>
     </html>

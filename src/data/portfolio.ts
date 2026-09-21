@@ -83,7 +83,6 @@ export const experience = [
     role: "backend ai engineer intern",
     description: "engineered backend ai pipeline architectures and core predictive models.",
     isActive: true,
-    isPlaceholder: true,
   },
   {
     dateRange: "aug 2026 – dec 2026",
@@ -91,7 +90,6 @@ export const experience = [
     role: "intern, education innovation fellowship",
     description: "collaborative innovation fellowship tackling data and educational workflows.",
     isActive: false,
-    isPlaceholder: true,
   },
 ];
 
@@ -131,7 +129,6 @@ export const education = {
 
 export const contact = {
   email: "lawrenzgarcia1202@gmail.com",
-  phone: "+63 994 949 9332",
   location: "valenzuela city, metro manila",
   github: "https://github.com/Renz5678",
   linkedin: "https://linkedin.com/in/lawrenz-matthew-garcia-3b2664319/",

@@ -23,75 +23,72 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="relative min-h-screen flex flex-col justify-center items-start px-6 md:px-24"
+      className="relative min-h-screen flex flex-col justify-center items-start px-6 md:px-24 py-32"
       aria-labelledby="contact-heading"
     >
       <div className="w-full max-w-4xl">
-        <h2 id="contact-heading" className="sr-only">contact</h2>
-        
+
+        {/* Section identifier */}
         <TextReveal>
-          <div className="text-xl md:text-3xl font-bold tracking-tight text-white mb-6">
-            <span className="text-primary-container font-normal opacity-80 mr-4">
-              renz@dev:~$
-            </span>
-            ./transmit_contact.sh
+          <div className="font-mono text-xs text-fg-muted mb-4 tracking-wide">
+            ~/contact.sh
           </div>
+          <h2 id="contact-heading" className="font-display text-2xl md:text-3xl font-bold text-fg tracking-tight mb-6">
+            contact
+          </h2>
         </TextReveal>
 
-        <TextReveal delay={0.2}>
-          <p className="text-sm md:text-base text-zinc-400 mb-8 max-w-xl">
-            initializing secure channel. waiting for incoming transmission.
-            click to copy address or open default client.
+        <TextReveal delay={0.15}>
+          <p className="font-sans text-sm text-fg-muted mb-10 max-w-[55ch] leading-relaxed">
+            open to internships and full-stack roles. send a message or reach out directly.
           </p>
         </TextReveal>
 
-        {/* Terminal Style Email CTA */}
-        <TextReveal delay={0.4}>
+        {/* Email — large, plain, clickable. No terminal box. */}
+        <TextReveal delay={0.3}>
           <a
             href={`mailto:${contact.email}`}
             onClick={copyEmail}
-            className="group flex items-center gap-4 p-4 border border-zinc-800 bg-zinc-950 hover:border-primary-container transition-colors duration-300 w-fit"
+            className="group block font-mono text-lg md:text-2xl text-fg hover:text-signal transition-colors duration-300 mb-2"
             title="click to copy & email"
           >
-            <span className="text-primary-container opacity-80">{">"}</span>
-            <span className="text-lg md:text-xl text-zinc-300 group-hover:text-white transition-colors">
-              {contact.email}
-            </span>
-            <motion.span
-              animate={{ opacity: [1, 0] }}
-              transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
-              className="text-primary-container"
-            >
-              █
-            </motion.span>
+            {contact.email}
           </a>
+          <div className="font-mono text-[10px] text-fg-dim tracking-widest h-5">
+            {copied && "copied to clipboard"}
+          </div>
         </TextReveal>
 
-        {/* Copy Feedback */}
-        <motion.div 
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: copied ? 1 : 0, y: copied ? 0 : -10 }}
-          className="h-8 mt-4 text-xs text-primary-container tracking-widest pointer-events-none"
-        >
-          [stdout]: copied to clipboard. opening mail client...
-        </motion.div>
-
-        {/* Icon-only links */}
-        <motion.div 
+        {/* Social links — plain text, no brackets */}
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.6, duration: 1 }}
-          className="mt-16 flex items-center gap-8 md:gap-12"
+          transition={{ delay: 0.5, duration: 0.8 }}
+          className="mt-12 flex items-center gap-8 md:gap-10"
         >
-          <a href={contact.github} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-white transition-colors flex items-center gap-2" title="github">
-            <span>[ github ]</span>
+          <a
+            href={contact.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono text-sm text-fg-muted hover:text-fg transition-colors"
+          >
+            github
           </a>
-          <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-white transition-colors flex items-center gap-2" title="linkedin">
-            <span>[ linkedin ]</span>
+          <a
+            href={contact.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono text-sm text-fg-muted hover:text-fg transition-colors"
+          >
+            linkedin
           </a>
-          <a href="/cv/lawrenz-garcia-cv.pdf" download="Lawrenz-Matthew-Garcia-CV.pdf" className="text-zinc-500 hover:text-white transition-colors flex items-center gap-2" title="download cv">
-            <span>[ fetch cv ]</span>
+          <a
+            href="/cv/lawrenz-garcia-cv.pdf"
+            download="Lawrenz-Matthew-Garcia-CV.pdf"
+            className="font-mono text-sm text-fg-muted hover:text-fg transition-colors"
+          >
+            resume
           </a>
         </motion.div>
       </div>

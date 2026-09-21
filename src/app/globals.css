@@ -1,46 +1,58 @@
 @import "tailwindcss";
 
 /* =========================================================
-   TAILWIND V4 THEME — Stitch Design Tokens
+   TAILWIND V4 THEME — Redesigned Token System
    ========================================================= */
 @theme {
-  /* Colors */
-  --color-primary-container: #e31b23;
-  --color-surface-bright: #3a3939;
-  --color-on-surface-variant: #e7bdb8;
-  --color-on-error-container: #ffdad6;
-  --color-on-primary-container: #fff9f8;
-  --color-primary: #ffb4ac;
-  --color-outline-variant: #262626;
-  --color-surface-container-low: #111111;
-  --color-surface-container: #161616;
-  --color-surface-container-high: #202020;
-  --color-outline: #1f1f1f;
-  --color-tertiary: #8e8e93;
-  --color-secondary: #a1a1aa;
-  --color-surface: #0d0d0d;
-  --color-surface-container-lowest: #070707;
-  --color-on-surface: #f4f4f5;
-  --color-background: #050505;
-  --color-accent: #e31b23;
-  --color-accent-hover: #ff2d36;
+  /* --- Core Palette ---
+     Dark with a slight blue-green undertone. Not #050505. 
+     Signal is a cooler, desaturated terracotta — not acid red.
+     Cursor green for availability indicators.                  */
+  --color-bg:               #080a0c;
+  --color-surface:          #0e1215;
+  --color-surface-raised:   #141a1f;
+  --color-border:           #1e2428;
+  --color-border-bright:    #2a3540;
+  --color-fg:               #c8cdd2;
+  --color-fg-muted:         #525a62;
+  --color-fg-dim:           #353d45;
+  --color-signal:           #c05038;
+  --color-signal-hover:     #d4604a;
+  --color-cursor-green:     #4caf82;
+
+  /* Legacy aliases — kept for components that haven't migrated yet */
+  --color-primary-container:       #c05038;
+  --color-surface-bright:          #1e2428;
+  --color-on-surface-variant:      #a8b4be;
+  --color-on-error-container:      #ffdad6;
+  --color-on-primary-container:    #f5f0ef;
+  --color-primary:                 #c8a09a;
+  --color-outline-variant:         #1e2428;
+  --color-surface-container-low:   #0e1215;
+  --color-surface-container:       #141a1f;
+  --color-surface-container-high:  #1e2428;
+  --color-outline:                 #1a2228;
+  --color-tertiary:                #6a7480;
+  --color-secondary:               #8090a0;
+  --color-surface-var:             #0e1215;
+  --color-on-surface:              #c8cdd2;
+  --color-background:              #080a0c;
+  --color-accent:                  #c05038;
+  --color-accent-hover:            #d4604a;
 
   /* Font families */
   --font-display: "Space Grotesk", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-  --font-sans: "Inter", sans-serif;
-
-  /* Letter spacing */
-  --letter-spacing-ultra-wide: 0.22em;
-  --letter-spacing-tighter-hero: -0.05em;
+  --font-mono:    "JetBrains Mono", monospace;
+  --font-sans:    "Inter", sans-serif;
 
   /* Max widths */
   --width-8xl: 1400px;
 
   /* Keyframes */
   --animate-terminal-blink: terminal-blink 1.05s infinite;
-  --animate-pulse-glow: pulse-glow 1.5s ease-in-out infinite;
-  --animate-fade-in-up: fade-in-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-pulse-glow:     pulse-glow 2s ease-in-out infinite;
+  --animate-fade-in-up:     fade-in-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-marquee:        marquee 28s linear infinite;
 
   @keyframes terminal-blink {
     0%, 49% { opacity: 1; }
@@ -48,13 +60,18 @@
   }
 
   @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 8px rgba(227, 27, 35, 0.25); }
-    50% { box-shadow: 0 0 20px rgba(227, 27, 35, 0.65); }
+    0%, 100% { box-shadow: 0 0 6px rgba(76, 175, 130, 0.3); }
+    50%       { box-shadow: 0 0 16px rgba(76, 175, 130, 0.7); }
   }
 
   @keyframes fade-in-up {
-    0% { opacity: 0; transform: translateY(20px); }
+    0%   { opacity: 0; transform: translateY(20px); }
     100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
   }
 }
 
@@ -64,25 +81,29 @@
 @layer base {
   :root {
     --font-display: var(--font-space-grotesk), sans-serif;
-    --font-mono: var(--font-jetbrains-mono), monospace;
-    --font-sans: var(--font-inter), sans-serif;
+    --font-mono:    var(--font-jetbrains-mono), monospace;
+    --font-sans:    var(--font-inter), sans-serif;
   }
 }
 
 /* =========================================================
    GLOBAL BASE
+   Body is Inter (sans), not monospace.
+   Monospace is reserved for actual code/command strings.
    ========================================================= */
 @layer base {
   html,
   body {
     margin: 0;
     padding: 0;
-    background-color: #050505;
-    color: #f4f4f5;
+    background-color: #080a0c;
+    color: #c8cdd2;
   }
   body {
     overflow-x: hidden;
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.7;
   }
   html {
     scroll-behavior: smooth;
@@ -92,18 +113,10 @@
 /* =========================================================
    CUSTOM SCROLLBAR
    ========================================================= */
-::-webkit-scrollbar {
-  width: 2px;
-}
-::-webkit-scrollbar-track {
-  background: #050505;
-}
-::-webkit-scrollbar-thumb {
-  background: #27272a;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #e31b23;
-}
+::-webkit-scrollbar       { width: 2px; }
+::-webkit-scrollbar-track { background: #080a0c; }
+::-webkit-scrollbar-thumb { background: #1e2428; }
+::-webkit-scrollbar-thumb:hover { background: #c05038; }
 
 /* =========================================================
    CUSTOM CURSOR (desktop / fine pointer only)
@@ -119,7 +132,7 @@
     position: fixed;
     width: 4px;
     height: 4px;
-    background: #e31b23;
+    background: #4caf82;
     border-radius: 9999px;
     pointer-events: none;
     z-index: 9999;
@@ -132,7 +145,7 @@
     position: fixed;
     width: 32px;
     height: 32px;
-    border: 1px solid rgba(227, 27, 35, 0.4);
+    border: 1px solid rgba(76, 175, 130, 0.3);
     border-radius: 9999px;
     pointer-events: none;
     z-index: 9998;
@@ -148,8 +161,8 @@
   .cursor-ring.is-hovering {
     width: 54px;
     height: 54px;
-    border-color: rgba(227, 27, 35, 0.9);
-    background-color: rgba(227, 27, 35, 0.04);
+    border-color: rgba(192, 80, 56, 0.8);
+    background-color: rgba(192, 80, 56, 0.04);
   }
 }
 
@@ -158,10 +171,10 @@
    ========================================================= */
 .reveal-item {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(16px);
   transition:
-    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 .reveal-item.revealed {
@@ -172,11 +185,16 @@
 /* =========================================================
    HAIRLINE BORDERS
    ========================================================= */
-.hairline-b {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-.hairline-t {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+.hairline-b { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+.hairline-t { border-top:    1px solid rgba(255, 255, 255, 0.05); }
+
+/* =========================================================
+   MARQUEE STRIP
+   ========================================================= */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
 }
 
 /* --- UTILITIES --- */
@@ -188,10 +206,6 @@
   }
 }
 
-@utility terminal-hairline {
-  border: 1px solid var(--color-zinc-900);
-}
-
 /* =========================================================
    TERMINAL CURSOR BLINK
    ========================================================= */
@@ -200,14 +214,14 @@
 }
 
 /* =========================================================
-   ACTIVE BADGE PULSE
+   ACTIVE BADGE PULSE — now green
    ========================================================= */
-.active-badge-pulse:hover {
-  animation: pulse-glow 1.5s ease-in-out infinite;
+.active-badge-pulse {
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 /* =========================================================
-   PREFERS REDUCED MOTION — kill all non-essential animation
+   PREFERS REDUCED MOTION
    ========================================================= */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -228,50 +242,52 @@
     opacity: 1 !important;
     animation: none !important;
   }
+
+  .marquee-track {
+    animation: none !important;
+  }
 }
 
 /* =========================================================
    TEXT SELECTION
    ========================================================= */
 ::selection {
-  background-color: #e31b23;
-  color: white;
+  background-color: #c05038;
+  color: #f5f0ef;
 }
 
 /* =========================================================
-   UTILITY CLASSES — explicit Tailwind-style classes for
-   values not auto-generated in v4 from CSS vars
+   EXPLICIT UTILITY CLASSES
    ========================================================= */
-.max-w-8xl {
-  max-width: 1400px;
-}
+.max-w-8xl    { max-width: 1400px; }
 
-.tracking-ultra-wide {
-  letter-spacing: 0.22em;
-}
+/* Font role utilities */
+.font-display { font-family: var(--font-space-grotesk), sans-serif; }
+.font-mono    { font-family: var(--font-jetbrains-mono), monospace; }
+.font-sans    { font-family: var(--font-inter), sans-serif; }
 
-.font-display {
-  font-family: var(--font-space-grotesk), sans-serif;
-}
+/* New palette utilities */
+.text-fg           { color: #c8cdd2; }
+.text-fg-muted     { color: #525a62; }
+.text-signal       { color: #c05038; }
+.text-cursor-green { color: #4caf82; }
+.bg-bg             { background-color: #080a0c; }
+.bg-surface        { background-color: #0e1215; }
+.bg-surface-raised { background-color: #141a1f; }
+.border-border     { border-color: #1e2428; }
+.border-border-bright { border-color: #2a3540; }
+.border-signal     { border-color: #c05038; }
 
-.font-mono {
-  font-family: var(--font-jetbrains-mono), monospace;
-}
-
-.font-sans {
-  font-family: var(--font-inter), sans-serif;
-}
-
-/* Color utilities */
-.text-primary-container { color: #e31b23; }
-.text-on-surface { color: #f4f4f5; }
-.text-on-surface-variant { color: #e7bdb8; }
-.text-primary { color: #ffb4ac; }
-.text-secondary { color: #a1a1aa; }
-.text-tertiary { color: #8e8e93; }
-.bg-background { background-color: #050505; }
-.bg-surface { background-color: #0d0d0d; }
-.bg-surface-container { background-color: #161616; }
-.bg-primary-container { background-color: #e31b23; }
-.border-primary-container { border-color: #e31b23; }
-.border-outline-variant { border-color: #262626; }
+/* Legacy color utilities — for components not yet migrated */
+.text-primary-container   { color: #c05038; }
+.text-on-surface          { color: #c8cdd2; }
+.text-on-surface-variant  { color: #a8b4be; }
+.text-primary             { color: #c8a09a; }
+.text-secondary           { color: #8090a0; }
+.text-tertiary            { color: #6a7480; }
+.bg-background            { background-color: #080a0c; }
+.bg-surface               { background-color: #0e1215; }
+.bg-surface-container     { background-color: #141a1f; }
+.bg-primary-container     { background-color: #c05038; }
+.border-primary-container { border-color: #c05038; }
+.border-outline-variant   { border-color: #1e2428; }
