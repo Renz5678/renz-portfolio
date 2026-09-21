@@ -76,7 +76,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdPerson) }}
         />
       </head>
-      <body className="bg-bg text-fg antialiased font-sans lowercase relative overflow-x-hidden">
+      <body
+        className="bg-bg text-fg antialiased font-sans lowercase relative overflow-x-hidden"
+        style={{ backgroundColor: "#080a0c", color: "#c8cdd2" }}
+      >
         {children}
       </body>
     </html>
