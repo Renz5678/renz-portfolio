@@ -48,8 +48,6 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  // Keep verification builds from replacing assets served by a running dev server.
-  distDir: process.env.NODE_ENV === "development" ? ".next" : ".next-production",
   experimental: {
     // Keep type checking enabled using the compiler API. The CLI subprocess
     // returns empty --showConfig output in the managed build environment.
