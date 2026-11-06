@@ -1,0 +1,12 @@
+/** Project descriptions checked against the source references in CONTENT_REGISTER.md. */
+export const selectedProjects = [
+  { id: 'netforge', title: 'NetForge', category: 'Mobile / networks', description: 'Design a network. Follow a packet. Understand the path.', detail: 'Built a mobile network topology designer and simulator; implemented Dijkstra, A*, Prim, and VLSM for routing, validation, and network planning.', stack: 'React Native · Expo · Skia · TypeScript', role: 'Full-stack development', href: 'https://github.com/Renz5678/NetForge', motif: 'network' },
+  { id: 'ada', title: 'ADA', category: 'Web / business tools', description: 'Less juggling. More making.', detail: 'Developed order tracking, catalog search, and account security, with responsive autocomplete and validation.', stack: 'React · Express · Sequelize · PostgreSQL', role: 'Order tracking, search and account security', href: 'https://github.com/Renz5678/ADA', motif: 'orders' },
+  { id: 'hardinia', title: 'Hardinia', category: 'Web / plant care', description: 'A little help for things that grow.', detail: 'Scheduled plant-care tasks, monitoring, and automated pest-alert emails. A React/Vite frontend and Dockerized Spring Boot API deployed on Vercel and Render.', stack: 'React · Spring Boot / Java 21 · Docker · Supabase', role: 'Frontend and API development', href: 'https://github.com/Renz5678/Hardenia-Frontend', backend: 'https://github.com/Renz5678/Hardinia-Backend', motif: 'commerce' },
+  { id: 'tofu', title: 'Tofu', category: 'Mobile / reading', description: 'Keep a place for your next chapter.', detail: 'A reading tracker with aggregated Google Books and Open Library search, backed by a caching workflow.', stack: 'React Native · Expo · Supabase', role: 'Mobile application development', href: 'https://github.com/Renz5678', linkLabel: 'GitHub profile', motif: 'orders' },
+] as const;
+export const capabilityGroups = [
+  { title: 'Interfaces that explain.', description: 'From a mobile network canvas to plant-care tasks: give complex tasks a clear place to happen.', evidence: 'NetForge & Hardinia', href: '#project-netforge' },
+  { title: 'Services that connect.', description: 'Requests, records and workflows across FastAPI, Spring Boot and Express, backed by DynamoDB or PostgreSQL.', evidence: 'PUP Tulong & ADA', href: '#project-ada' },
+  { title: 'Algorithms made tangible.', description: 'Turn routing rules, graph traversal and inventory calculations into behavior people can see and use.', evidence: 'NetForge & ADA', href: '#project-netforge' },
+] as const;

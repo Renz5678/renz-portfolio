@@ -2,12 +2,60 @@
   "status": "provisional-authored-profile",
   "schema_note": "Three-dimension working profile; upstream full schema extraction and measured_palette pending source pixel access. Not a completed Design DNA analysis.",
   "design_system": {
-    "color": { "origin": "authored-semantic-proposal", "background": "#060A10", "foreground": "#E9E5DB", "secondary_text": "#A8B8BC", "accent": "#DDB87A", "divider": "#35444B" },
-    "typography": { "display": "Georgia (prototype)", "body": "Arial, Helvetica, sans-serif", "technical": "existing JetBrains Mono" },
-    "layout": { "max_width_px": 1280, "mobile_breakpoint_px": 800, "reading_order": "vertical", "composition": "asymmetric editorial" },
-    "motion": { "idle_translation_px": 3, "idle_duration_seconds": 5, "hero_scroll_translation_max_px": 24, "reduced_motion": "static", "pause_control": true }
+    "color": {
+      "origin": "authored-semantic-proposal",
+      "background": "#060A10",
+      "foreground": "#E9E5DB",
+      "secondary_text": "#A8B8BC",
+      "accent": "#EBBD69",
+      "divider": "#3C5055"
+    },
+    "typography": {
+      "display": "Locally hosted Unbounded Black 900",
+      "body": "existing local Inter",
+      "technical": "existing JetBrains Mono"
+    },
+    "layout": {
+      "max_width_px": 1280,
+      "mobile_breakpoint_px": 800,
+      "reading_order": "vertical",
+      "composition": "asymmetric editorial"
+    },
+    "motion": {
+      "idle_translation_px": 3,
+      "idle_duration_seconds": 5,
+      "hero_scroll_translation_max_px": 24,
+      "reduced_motion": "static",
+      "pause_control": true
+    }
   },
-  "design_style": { "mood": ["quiet", "curious", "warm", "isolated"], "imagery": "near-black sky, low teal horizon, small amber light", "copy": "personal concise prose with factual project evidence", "ornamentation": "sparse; no badges or dashboard framing" },
-  "visual_effects": { "canvas": false, "webgl": false, "css_atmosphere": true, "deterministic_svg_stars": true, "pixel_character": "provisional SVG study", "ascii": "explicitly requested alternate representation", "scroll": "bounded progressive CSS enhancement with static fallback" },
-  "pending": ["reference pixel inspection", "deterministic measured palette", "upstream schema completion", "sprite atlas", "real project screenshot", "desktop and mobile visual review"]
+  "design_style": {
+    "mood": [
+      "quiet",
+      "curious",
+      "warm",
+      "isolated"
+    ],
+    "imagery": "near-black sky, low teal horizon, small amber light",
+    "copy": "personal concise prose with factual project evidence",
+    "ornamentation": "sparse; no badges or dashboard framing",
+    "composition": "oversized offset uppercase hero; stacked project title; left-aligned contact"
+  },
+  "visual_effects": {
+    "canvas": false,
+    "webgl": false,
+    "css_atmosphere": true,
+    "deterministic_svg_stars": true,
+    "pixel_character": "provisional SVG study",
+    "ascii": "explicitly requested alternate representation",
+    "scroll": "bounded progressive CSS enhancement with static fallback"
+  },
+  "pending": [
+    "reference pixel inspection",
+    "deterministic measured palette",
+    "upstream schema completion",
+    "sprite atlas",
+    "real project screenshot",
+    "desktop and mobile visual review"
+  ]
 }

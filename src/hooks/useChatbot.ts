@@ -35,14 +35,14 @@ function genId(): string {
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
-function loadHistory(): Message[] {
+function loadHistory(storageKey = STORAGE_KEY): Message[] {
   try {
     if (typeof window === "undefined") return [];
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(storageKey);
     if (!raw) return [];
     const stored = JSON.parse(raw) as { messages: Message[]; savedAt: number };
     if (Date.now() - stored.savedAt > EXPIRY_MS) {
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(storageKey);
       return [];
     }
     return stored.messages;
@@ -51,11 +51,11 @@ function loadHistory(): Message[] {
   }
 }
 
-function saveHistory(messages: Message[]): void {
+function saveHistory(messages: Message[], storageKey = STORAGE_KEY): void {
   try {
     if (typeof window === "undefined") return;
     localStorage.setItem(
-      STORAGE_KEY,
+      storageKey,
       JSON.stringify({ messages, savedAt: Date.now() })
     );
   } catch {}
@@ -64,8 +64,8 @@ function saveHistory(messages: Message[]): void {
 // ─────────────────────────────────────────────────────────────────────────────
 // Greeting factory — sources from the "greeting" intent
 // ─────────────────────────────────────────────────────────────────────────────
-function makeGreeting(): Message {
-  const reply = getReply("greeting", "");
+function makeGreeting(resolver = getReply): Message {
+  const reply = resolver("greeting", "");
   return {
     id: genId(),
     role: "bot",
@@ -78,7 +78,7 @@ function makeGreeting(): Message {
 // ─────────────────────────────────────────────────────────────────────────────
 // Hook
 // ─────────────────────────────────────────────────────────────────────────────
-export function useChatbot() {
+export function useChatbot({ reply = getReply, storageKey = STORAGE_KEY }: { reply?: typeof getReply; storageKey?: string } = {}) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const hydrated = useRef(false);
@@ -89,14 +89,14 @@ export function useChatbot() {
     if (hydrated.current) return;
     hydrated.current = true;
 
-    const history = loadHistory();
-    setMessages(history.length > 0 ? history : [makeGreeting()]);
-  }, []);
+    const history = loadHistory(storageKey);
+    setMessages(history.length > 0 ? history : [makeGreeting(reply)]);
+  }, [reply, storageKey]);
 
   // Persist whenever messages change
   useEffect(() => {
-    if (messages.length > 0) saveHistory(messages);
-  }, [messages]);
+    if (messages.length > 0) saveHistory(messages, storageKey);
+  }, [messages, storageKey]);
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -123,27 +123,27 @@ export function useChatbot() {
     const delay = 420 + Math.random() * 380;
     timerRef.current = setTimeout(() => {
       const intentId = classify(trimmed);
-      const reply    = getReply(intentId, trimmed);
+      const response = reply(intentId, trimmed);
 
       const botMsg: Message = {
         id: genId(),
         role: "bot",
-        content: reply.text,
-        links: reply.links,
+        content: response.text,
+        links: response.links,
         timestamp: Date.now(),
       };
 
       setMessages(prev => [...prev, botMsg]);
       setIsTyping(false);
     }, delay);
-  }, []);
+  }, [reply]);
 
   const clear = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
     setIsTyping(false);
-    try { localStorage.removeItem(STORAGE_KEY); } catch {}
-    setMessages([makeGreeting()]);
-  }, []);
+    try { localStorage.removeItem(storageKey); } catch {}
+    setMessages([makeGreeting(reply)]);
+  }, [reply, storageKey]);
 
   return { messages, isTyping, send, clear };
 }

@@ -1,7 +1,7 @@
 # Cosmic portfolio implementation plan
 
 Date: 6 November 2026
-Status: ready for review; application implementation has not started.
+Status: implementation in progress; preview expanded through P09/P10, with partial P11. See VERIFICATION.md for executed checks and unresolved release prerequisites.
 Source: [discovery and design proposal](./PROPOSAL.md).
 
 ## Scope and decisions
@@ -198,9 +198,10 @@ Deployment checklist: confirm actual host/runtime, install lockfile dependencies
 
 ## Immediate next actions
 
-1. Review the direction in `PROPOSAL.md` and approve the M1 design choices.
-2. Resolve Git ref-write access and restore browser/source-asset inspection for M0.
-3. Confirm the featured project's facts and links from available repository evidence.
-4. Complete the measured specification and asset sample, then implement M2 after design approval.
+1. Finish browser accessibility verification: keyboard/skip navigation, 200% zoom, OS reduced-motion changes, hidden-tab suspension, and JavaScript disabled.
+2. Measure production performance and compare against the original homepage on the same device.
+3. Complete approved reference-art measurement and real project screenshots.
+4. Resolve Storybook registry access or document the component gallery as the final lightweight alternative.
+5. Present the finished preview for homepage migration review, then prepare release instructions.
 
-Planning documents can be reviewed now. Application implementation, installs, commits, pushes and deployment have not been performed by this plan.
+Current progress: expanded journey and CV-based content implemented in `/cosmic-preview`; application work is on `feat/cosmic-portfolio`. Production webpack build now passes with TypeScript compiler API checking enabled. Read VERIFICATION.md and CONTENT_REGISTER.md before release. Storybook, source-art measurements and full release verification remain pending. No push or deployment has been performed.

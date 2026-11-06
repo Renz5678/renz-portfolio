@@ -1,57 +1,7 @@
-import CustomCursor from "@/components/cursor/CustomCursor";
-import Nav from "@/components/layout/Nav";
-import Footer from "@/components/layout/Footer";
-import Hero from "@/components/sections/Hero";
-import About from "@/components/sections/About";
-import Projects from "@/components/sections/Projects";
-import TechStack from "@/components/sections/TechStack";
-import Experience from "@/components/sections/Experience";
-import AchievementsEducation from "@/components/sections/AchievementsEducation";
-import Contact from "@/components/sections/Contact";
-import ScrollRevealInit from "@/components/ScrollRevealInit";
-import EasterEggs from "@/components/EasterEggs";
-import MatrixWipe from "@/components/canvas/MatrixWipe";
-import PingIntro from "@/components/canvas/PingIntro";
-import ChatWidget from "@/components/chatbot/ChatWidget";
-
+import type { Metadata } from 'next';
+import CosmicLayout from './cosmic-preview/layout';
+import CosmicPortfolio from '@/components/cosmic/CosmicPortfolio';
+export const metadata: Metadata = {alternates:{canonical:'/'}};
 export default function Home() {
-  return (
-    <>
-      {/* Ping terminal boot screen — plays once per session */}
-      <PingIntro />
-
-      {/* Matrix rain wipe — fires on each nav section click */}
-      <MatrixWipe />
-
-      {/* Custom cursor (client, fine-pointer only) */}
-      <CustomCursor />
-
-      {/* Scroll-reveal IntersectionObserver init (client, no DOM output) */}
-      <ScrollRevealInit />
-
-      {/* Easter eggs — all hidden interaction triggers */}
-      <EasterEggs />
-
-      {/* Intent-based chatbot — floating bottom-right, Ctrl+/ shortcut */}
-      <ChatWidget />
-
-      {/* Persistent navigation */}
-      <Nav />
-
-      {/* Hero unveil panel (full-screen) */}
-      <Hero />
-
-      {/* Main editorial body */}
-      <main className="w-full max-w-8xl mx-auto px-6 lg:px-12 relative z-30">
-        <About />
-        <Projects />
-        <TechStack />
-        <Experience />
-        <AchievementsEducation />
-        <Contact />
-      </main>
-
-      <Footer />
-    </>
-  );
+ return <CosmicLayout><CosmicPortfolio /></CosmicLayout>;
 }

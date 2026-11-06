@@ -6,7 +6,7 @@
 
 import {
   hero, about, projects, experience, leadership,
-  achievements, education, contact,
+  achievements, education, contact, technicalSkills,
 } from "@/data/portfolio";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -49,7 +49,7 @@ export const INTENT_TRIGGERS: Record<IntentId, string[]> = {
   projects: [
     "projects", "work", "built", "deployed", "portfolio", "apps",
     "applications", "what have you built", "show me", "hardinia",
-    "netforge", "ada", "nexus", "pup tulong", "shipped",
+    "netforge", "ada", "tofu", "pup tulong", "shipped",
   ],
   skills: [
     "skills", "stack", "tech", "languages", "tools", "technologies",
@@ -58,8 +58,8 @@ export const INTENT_TRIGGERS: Record<IntentId, string[]> = {
   ],
   experience: [
     "experience", "job", "work history", "career", "intern", "internship",
-    "worked", "companies", "leadership", "flyrank", "eskwelabs",
-    "aws student", "roles", "employment",
+    "worked", "companies", "leadership", "hardy", "eskwelabs",
+    "aws student", "hardy", "cto", "roles", "employment",
   ],
   education: [
     "education", "degree", "school", "pup", "university", "study",
@@ -103,7 +103,7 @@ const REPLIES: Record<IntentId, (rawInput?: string) => BotReply> = {
   }),
 
   who_are_you: () => ({
-    text: `i'm lawrenz matthew garcia — a 3rd-year cs student at pup and full-stack developer.\n\n${about.bio}\n\ncore focus:\n${about.coreFocus.map(f => `→ ${f}`).join("\n")}`,
+    text: `i'm lawrenz matthew garcia — a cs student at pup and full-stack developer.\n\n${about.bio}\n\ncore focus:\n${about.coreFocus.map(f => `→ ${f}`).join("\n")}`,
   }),
 
   projects: () => ({
@@ -114,7 +114,7 @@ const REPLIES: Record<IntentId, (rawInput?: string) => BotReply> = {
   }),
 
   skills: () => ({
-    text: `my current stack:\n\ncore      →  python, java, react, fastapi\nplatform  →  spring boot, next.js, docker, supabase, aws\nmobile    →  react native, expo, skia\ntools     →  git, github actions, vercel, tailwind, dynamodb, redis, c++`,
+    text: `Languages: ${technicalSkills.languages.join(", ")}\\n\\nFrameworks: ${technicalSkills.frameworks.join(", ")}\\n\\nCloud, databases and tools: ${technicalSkills.tools.join(", ")}`,
   }),
 
   experience: () => ({
@@ -144,7 +144,7 @@ const REPLIES: Record<IntentId, (rawInput?: string) => BotReply> = {
   }),
 
   availability: () => ({
-    text: `status: ${hero.availability}.\n\ni'm open to internship opportunities and full-stack roles. feel free to reach out.`,
+    text: `status: ${hero.availability}.`,
     links: [
       { label: "email me", href: `mailto:${contact.email}` },
       { label: "linkedin", href: contact.linkedin },
@@ -157,7 +157,7 @@ const REPLIES: Record<IntentId, (rawInput?: string) => BotReply> = {
   }),
 
   location: () => ({
-    text: `i'm based in ${contact.location}, ph.\navailable for remote work worldwide.`,
+    text: `i'm based in ${contact.location}, ph.`,
   }),
 
   socials: () => ({

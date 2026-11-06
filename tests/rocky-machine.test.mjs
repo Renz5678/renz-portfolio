@@ -25,3 +25,25 @@ test('the reducer does not mutate prior state; pause is reversible', () => {
  assert.equal(start.mode,'idle');
  assert.deepEqual(rockyReducer(paused,{type:'PAUSE'}),initialRockyState);
 });
+test('contextual reactions cannot override dialogue, pause or hide', () => {
+ for (const protectedState of [{mode:'communicating',paused:false,hidden:false},{mode:'ascii',paused:false,hidden:false},{mode:'idle',paused:true,hidden:false},{mode:'resting',paused:false,hidden:true}]) {
+  for(const type of ['TRAVEL','CURIOUS','EXCITED','WAVE']) assert.deepEqual(rockyReducer(protectedState,{type}),protectedState);
+ }
+});
+test('travel and reactions settle, but late timers leave dialogue intact', () => {
+ let state=rockyReducer(initialRockyState,{type:'TRAVEL'});
+ assert.equal(state.mode,'traveling');
+ state=rockyReducer(state,{type:'CURIOUS'});
+ assert.equal(state.mode,'curious');
+ assert.equal(rockyReducer(state,{type:'SETTLE'}).mode,'idle');
+ const talking=rockyReducer(state,{type:'TALK'});
+ assert.deepEqual(rockyReducer(talking,{type:'SETTLE'}),talking);
+});
+
+test('every spontaneous animation returns to idle', () => {
+ for (const type of ['TRAVEL','CURIOUS','EXCITED','WAVE']) {
+  const active = rockyReducer(initialRockyState,{type});
+  assert.notEqual(active.mode,'idle');
+  assert.deepEqual(rockyReducer(active,{type:'SETTLE'}),initialRockyState);
+ }
+});
