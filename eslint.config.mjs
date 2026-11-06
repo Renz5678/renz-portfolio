@@ -9,9 +9,12 @@ const eslintConfig = defineConfig([
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
+    ".next-production/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "generated_images/**",
+    "rocky-16bit-animation-pack/**",
   ]),
 ]);
 

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { initialRockyState, rockyReducer } from '../src/components/rocky/rocky-machine.ts';
+import { classify } from '../src/lib/classifier.ts';
 test('pausing survives a conversation and dismissal', () => {
  const paused = rockyReducer(initialRockyState, { type: 'PAUSE' });
  const talking = rockyReducer(paused, { type: 'TALK' });
@@ -46,4 +47,11 @@ test('every spontaneous animation returns to idle', () => {
   assert.notEqual(active.mode,'idle');
   assert.deepEqual(rockyReducer(active,{type:'SETTLE'}),initialRockyState);
  }
+});
+
+test('classifier matches whole trigger words rather than inner substrings', () => {
+ assert.equal(classify('what is this?'), 'unknown');
+ assert.equal(classify('can you help me?'), 'help');
+ assert.equal(classify('where in the philippines?'), 'location');
+ assert.equal(classify('hi rocky'), 'greeting');
 });

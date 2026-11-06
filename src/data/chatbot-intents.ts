@@ -7,7 +7,7 @@
 import {
   hero, about, projects, experience, leadership,
   achievements, education, contact, technicalSkills,
-} from "@/data/portfolio";
+} from "./portfolio.ts";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -59,7 +59,7 @@ export const INTENT_TRIGGERS: Record<IntentId, string[]> = {
   experience: [
     "experience", "job", "work history", "career", "intern", "internship",
     "worked", "companies", "leadership", "hardy", "eskwelabs",
-    "aws student", "hardy", "cto", "roles", "employment",
+    "aws student", "cto", "roles", "employment",
   ],
   education: [
     "education", "degree", "school", "pup", "university", "study",
@@ -114,7 +114,7 @@ const REPLIES: Record<IntentId, (rawInput?: string) => BotReply> = {
   }),
 
   skills: () => ({
-    text: `Languages: ${technicalSkills.languages.join(", ")}\\n\\nFrameworks: ${technicalSkills.frameworks.join(", ")}\\n\\nCloud, databases and tools: ${technicalSkills.tools.join(", ")}`,
+    text: `Languages: ${technicalSkills.languages.join(", ")}\n\nFrameworks: ${technicalSkills.frameworks.join(", ")}\n\nCloud, databases and tools: ${technicalSkills.tools.join(", ")}`,
   }),
 
   experience: () => ({

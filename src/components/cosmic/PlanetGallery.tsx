@@ -10,14 +10,15 @@ export default function PlanetGallery() {
  const [requested,setRequested]=useState<number>();
  useEffect(()=>{
   const follow=()=>{const index=projects.findIndex(item=>`#project-${item.id}`===window.location.hash);if(index>=0){setRequested(index);document.getElementById('works')?.scrollIntoView();}};
-  follow();window.addEventListener('hashchange',follow);return()=>window.removeEventListener('hashchange',follow);
+  const click=(e:MouseEvent)=>{const a=(e.target as Element).closest?.('a[href^="#project-"]');if(a&&a.getAttribute('href')===window.location.hash){e.preventDefault();follow();}};
+  follow();window.addEventListener('hashchange',follow);window.addEventListener('click',click);return()=>{window.removeEventListener('hashchange',follow);window.removeEventListener('click',click);};
  },[]);
  const project=projects[active];
  return <section id="works" className="cosmic-work cosmic-solar-system cosmic-orbital-gallery" aria-labelledby="cosmic-work-heading">
   <div className="cosmic-orbital-sticky">
    <div className="cosmic-section-top"><div><p className="cosmic-eyebrow">Selected work</p><h2 id="cosmic-work-heading">Worlds I’m building.</h2></div></div>
    <p className="cosmic-orbit-hint">Scroll sideways, drag, or choose a planet. There’s always another world.</p>
-   <CyclicOrbit label="Project orbit" targetIndex={requested} onChange={setActive} items={projects.map(item=>({label:item.title,art:<Planet variant={item.id} label={item.title}/>}))}/>
+   <CyclicOrbit label="Project orbit" targetIndex={requested} onChange={i=>{setActive(i);setRequested(undefined);}} items={projects.map(item=>({label:item.title,art:<Planet variant={item.id} label={item.title}/>}))}/>
    <div className="cosmic-orbital-details" aria-live="polite" aria-atomic="true">
     <article key={project.id} id={`project-${project.id}`}>
      <div><p className="cosmic-eyebrow">{String(active+1).padStart(2,'0')} / {project.category}</p><h3>{project.title}</h3><p className="cosmic-row-lede">{project.description}</p></div>

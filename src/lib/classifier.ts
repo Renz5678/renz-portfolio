@@ -9,7 +9,7 @@
  *   3. Return the highest-scoring IntentId, or "unknown" if no match.
  */
 
-import { INTENT_TRIGGERS, IntentId } from "@/data/chatbot-intents";
+import { INTENT_TRIGGERS, type IntentId } from "../data/chatbot-intents.ts";
 
 export function classify(input: string): IntentId {
   const normalised = input
@@ -17,6 +17,8 @@ export function classify(input: string): IntentId {
     .replace(/[^a-z0-9\s]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+
+  const padded = ` ${normalised} `;
 
   let best: IntentId = "unknown";
   let bestScore = 0;
@@ -28,7 +30,7 @@ export function classify(input: string): IntentId {
 
     let score = 0;
     for (const trigger of triggers) {
-      if (normalised.includes(trigger)) {
+      if (padded.includes(` ${trigger} `)) {
         // Longer phrases = more specific = higher score
         score += trigger.split(" ").length * 2;
       }
