@@ -753,3 +753,34 @@ to{translate:0 24px}
 .cosmic-sound { position:fixed;left:max(12px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));z-index:41; }
 .cosmic-sound button { min-height:44px;padding:8px 12px;background:#08110ee8;border:1px solid var(--line);font:11px var(--font-jetbrains-mono),monospace;color:var(--ink); }
 .cosmic-sound span { display:block;max-width:180px;padding:8px;background:var(--void);font-size:11px; }
+
+/* Native scrolling remains internal; the visible controls are buttons and swipes. */
+.cosmic-cycle { position:relative; }
+.cosmic-cycle-rail { position:absolute;width:100%;height:1px;inset:auto 0 0;padding:0;opacity:0;pointer-events:none;clip-path:inset(50%);scrollbar-width:none; }
+.cosmic-cycle-rail::-webkit-scrollbar { display:none; }
+.cosmic-cycle-navigation { justify-content:center;gap:12px; }
+.cosmic-cycle-navigation > button:nth-child(2) { order:1; }
+.cosmic-cycle-navigation > .cosmic-orbit-playback { order:2; }
+.cosmic-cycle-navigation > button:last-child { order:3; }
+.cosmic-belt-selection { min-height:28px;text-align:center;color:var(--amber);font-size:14px;margin:0 0 16px!important; }
+@media(max-width:800px) {
+ .cosmic-orbital-gallery { padding:48px 0; }
+ .cosmic-orbital-gallery .cosmic-section-top { margin-bottom:16px; }
+ .cosmic-orbital-gallery h2 { font-size:clamp(20px,5.5vw,32px);line-height:1.3; }
+ .cosmic-orbit-hint { max-width:34ch;line-height:1.7; }
+ .cosmic-cycle .cosmic-shared-orbit { height:280px;margin-bottom:20px; }
+ .cosmic-cycle-item .cosmic-planet-caption { max-width:110px;white-space:normal;text-align:center;font-size:11px;line-height:1.5; }
+ .cosmic-cycle-item:not([aria-pressed=true]) .cosmic-planet-caption { opacity:0; }
+ .cosmic-orbital-details { min-height:0;margin-top:24px;padding-top:24px; }
+ .cosmic-orbital-details article { gap:18px; }
+ .cosmic-orbital-details h3 { font-size:28px; }
+ .cosmic-orbital-details .cosmic-project-links { gap:12px; }
+ .cosmic-tech-belt { padding:24px 0 40px;margin-bottom:32px; }
+ .cosmic-belt-heading { display:block; }
+ .cosmic-belt-heading h3 { font-size:18px;line-height:1.5; }
+ .cosmic-belt-heading p { margin-top:12px;line-height:1.8; }
+ .cosmic-dense-belt .cosmic-shared-orbit { height:250px;margin-bottom:0; }
+ .cosmic-dense-belt .cosmic-skill-world > span:last-child { display:none; }
+ .cosmic-belt-caption { text-align:center;max-width:32ch;margin-inline:auto!important;line-height:1.8; }
+}
+@media(max-width:360px) { .cosmic-cycle .cosmic-shared-orbit { height:250px; }.cosmic-dense-belt .cosmic-shared-orbit { height:230px; }.cosmic-cycle-item { width:88px; } }

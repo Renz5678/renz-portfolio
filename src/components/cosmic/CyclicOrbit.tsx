@@ -8,7 +8,7 @@ export default function CyclicOrbit({items,label,onChange,targetIndex,dense=fals
  const playback=useRef({staticMotion:true,paused:false});
  const interactionUntil=useRef(0);
  const [paused,setPaused]=useState(false);
- const drag=useRef<{x:number;startX:number}|null>(null);
+ const drag=useRef<{x:number;startX:number;startY:number}|null>(null);
  const suppressClick=useRef(false);
  const [active,setActive]=useState(0);
  const {staticMotion}=useMotionPolicy();
@@ -85,13 +85,14 @@ export default function CyclicOrbit({items,label,onChange,targetIndex,dense=fals
  return <div className={`cosmic-cycle${dense?' cosmic-dense-belt':''}`} aria-label={label}>
   <div ref={stage} className="cosmic-shared-orbit" role="group" aria-label={`${label}: swipe or scroll horizontally`} tabIndex={0}
    onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();move(e.key==='ArrowRight'?1:-1);}}}
-   onPointerDown={e=>{if(e.pointerType==='mouse'&&e.button!==0)return;suppressClick.current=false;drag.current={x:e.clientX,startX:e.clientX};}}
-   onPointerMove={e=>{if(!drag.current||!rail.current)return;const pointer=drag.current;if(!suppressClick.current&&Math.abs(pointer.startX-e.clientX)<=6)return;suppressClick.current=true;e.currentTarget.setPointerCapture(e.pointerId);rail.current.scrollLeft+=pointer.x-e.clientX;pointer.x=e.clientX;}}
+   onPointerDown={e=>{if(e.pointerType==='mouse'&&e.button!==0)return;suppressClick.current=false;drag.current={x:e.clientX,startX:e.clientX,startY:e.clientY};}}
+   onPointerMove={e=>{if(!drag.current||!rail.current)return;const pointer=drag.current;if(!suppressClick.current&&Math.abs(e.clientY-pointer.startY)>Math.abs(e.clientX-pointer.startX))return;if(!suppressClick.current&&Math.abs(pointer.startX-e.clientX)<=6)return;suppressClick.current=true;e.currentTarget.setPointerCapture(e.pointerId);rail.current.scrollLeft+=pointer.x-e.clientX;pointer.x=e.clientX;}}
    onPointerUp={e=>{drag.current=null;if(e.currentTarget.hasPointerCapture(e.pointerId))e.currentTarget.releasePointerCapture(e.pointerId);}} onPointerCancel={()=>{drag.current=null;}} onLostPointerCapture={()=>{drag.current=null;}}
    onClickCapture={e=>{if(suppressClick.current){e.preventDefault();e.stopPropagation();suppressClick.current=false;}}}>
    <div className="cosmic-orbit-ellipse" aria-hidden="true"/>
    {items.map((item,index)=><button className="cosmic-cycle-item" key={item.label} aria-label={`Explore ${item.label}`} aria-pressed={index===active} onClick={()=>choose(index)}>{item.art}</button>)}
   </div>
-  <div className="cosmic-cycle-navigation"><button className="cosmic-orbit-playback" aria-label={`${paused?'Resume':'Pause'} ${label} rotation`} aria-pressed={paused} disabled={staticMotion} onClick={()=>setPaused(value=>!value)}>{paused?'Play':'Pause'}</button><button aria-label={`Previous in ${label}`} onClick={()=>move(-1)}>←</button><div ref={rail} className="cosmic-cycle-rail" tabIndex={0} role="region" aria-label={`${label} horizontal scroll`}><div style={{width:cycle*3+320,height:1}}/></div><button aria-label={`Next in ${label}`} onClick={()=>move(1)}>→</button></div>
+  {dense&&<p className="cosmic-belt-selection" aria-live="polite">{items[active]?.label}</p>}
+  <div className="cosmic-cycle-navigation"><button className="cosmic-orbit-playback" aria-label={`${paused?'Resume':'Pause'} ${label} rotation`} aria-pressed={paused} disabled={staticMotion} onClick={()=>setPaused(value=>!value)}>{paused?'Play':'Pause'}</button><button aria-label={`Previous in ${label}`} onClick={()=>move(-1)}>←</button><div ref={rail} className="cosmic-cycle-rail" aria-hidden="true"><div style={{width:cycle*3+320,height:1}}/></div><button aria-label={`Next in ${label}`} onClick={()=>move(1)}>→</button></div>
  </div>;
 }
