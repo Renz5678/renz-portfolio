@@ -16,13 +16,17 @@ export default function CyclicOrbit({items,label,onChange,targetIndex,dense=fals
  useEffect(()=>{
   const el=rail.current,scene=stage.current;if(!el||!scene)return;
   const nodes=[...scene.querySelectorAll<HTMLElement>('.cosmic-cycle-item')];
-  let frame=0,lastTime=0,visible=false,target=cycle,position=cycle,written=cycle,lastIndex=-1;
+  let frame=0,lastTime=0,visible=false,target=cycle,position=cycle,written=cycle,lastIndex=-1,lastRailWrite=0;
   let width=scene.clientWidth,height=scene.clientHeight;
   let itemWidth=Math.max(...nodes.map(node=>node.clientWidth));
-  const draw=()=>{
-   const radius=Math.max(0,Math.min(width*.39,(width-itemWidth*1.12)/2-8));
-   const ellipse=scene.querySelector<HTMLElement>('.cosmic-orbit-ellipse');
+  const ellipse=scene.querySelector<HTMLElement>('.cosmic-orbit-ellipse');
+  let radius=0;
+  const measure=()=>{
+   width=scene.clientWidth;height=scene.clientHeight;itemWidth=Math.max(...nodes.map(node=>node.clientWidth));
+   radius=Math.max(0,Math.min(width*.39,(width-itemWidth*1.12)/2-8));
    if(ellipse){ellipse.style.width=`${radius*2}px`;ellipse.style.left=`${width/2-radius}px`;}
+  };
+  const draw=()=>{
    const phase=(position-cycle)/unit;
    const index=((Math.round(phase)%count)+count)%count;
    if(index!==lastIndex){lastIndex=index;setActive(index);onChange?.(index);}
@@ -30,9 +34,9 @@ export default function CyclicOrbit({items,label,onChange,targetIndex,dense=fals
     const angle=Math.PI/2+(i-phase)*Math.PI*2/count,depth=(Math.sin(angle)+1)/2;
     const spread=dense?.82+(i%5)*.09:1;
     const size=dense?.5+depth*.35+(i%3)*.08:.5+depth*.5;
-    node.dataset.front=String(depth>.8);
+    const front=String(depth>.8);if(node.dataset.front!==front)node.dataset.front=front;
     node.style.transform=`translate(-50%,-50%) translate(${Math.cos(angle)*radius*spread/(dense?1.18:1)}px,${Math.sin(angle)*height*.23*spread}px) scale(${size})`;
-    node.style.opacity=String(.45+depth*.55);node.style.zIndex=String(1+Math.round(depth*10));
+    node.style.opacity=String(.45+depth*.55);const z=String(1+Math.round(depth*10));if(node.style.zIndex!==z)node.style.zIndex=z;
    });
   };
   const tick=(time:number)=>{
@@ -42,12 +46,13 @@ export default function CyclicOrbit({items,label,onChange,targetIndex,dense=fals
    if(auto){
     target+=20*dt/1000;
     if(target>cycle*1.5){target-=cycle;position-=cycle;}
-    el.scrollLeft=target;written=el.scrollLeft;
+    if(time-lastRailWrite>150){el.scrollLeft=target;written=el.scrollLeft;lastRailWrite=time;}
    }
    // Exponential easing gives the same response on 60 Hz and high refresh displays.
+   const previous=position;
    position=policy.staticMotion?target:position+(target-position)*(1-Math.exp(-dt/85));
    if(Math.abs(target-position)<.001)position=target;
-   draw();
+   if(Math.abs(position-previous)>.0001)draw();
    frame=visible?requestAnimationFrame(tick):0;
   };
   const scroll=()=>{
@@ -57,9 +62,9 @@ export default function CyclicOrbit({items,label,onChange,targetIndex,dense=fals
    if(target>cycle*1.5){target-=cycle;position-=cycle;el.scrollLeft=target;}
    written=el.scrollLeft;
   };
-  el.scrollLeft=cycle;written=el.scrollLeft;draw();
+  el.scrollLeft=cycle;written=el.scrollLeft;measure();draw();
   el.addEventListener('scroll',scroll,{passive:true});
-  const resize=new ResizeObserver(()=>{width=scene.clientWidth;height=scene.clientHeight;itemWidth=Math.max(...nodes.map(node=>node.clientWidth));draw();});resize.observe(scene);
+  const resize=new ResizeObserver(()=>{measure();draw();});resize.observe(scene);
   const visibility=new IntersectionObserver(([entry])=>{
    visible=entry.isIntersecting;lastTime=0;
    if(visible&&!frame)frame=requestAnimationFrame(tick);

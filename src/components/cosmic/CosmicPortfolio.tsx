@@ -1,3 +1,4 @@
+import SpaceAudio from '@/components/cosmic/SpaceAudio';
 import JourneyMotion from '@/components/cosmic/JourneyMotion';
 import PlanetGallery from '@/components/cosmic/PlanetGallery';
 import JourneyNav from '@/components/cosmic/JourneyNav';
@@ -25,6 +26,6 @@ export default function CosmicPortfolio() {
         <section id="contact" className="cosmic-contact" aria-labelledby="cosmic-contact-heading"><span className="cosmic-eyebrow">Until our paths cross</span><h2 id="cosmic-contact-heading">Good things<br /><em>start with hello.</em></h2><a className="cosmic-text-link cosmic-email" href={`mailto:${contact.email}`}>Say hello <span aria-hidden="true">↗</span></a><nav aria-label="Connect"><a href={contact.github}>GitHub ↗</a><a href={contact.linkedin}>LinkedIn ↗</a><a href="/cv/lawrenz-garcia-cv.pdf">Résumé ↗</a></nav></section>
         <footer className="cosmic-footer"><span>Lawrenz Garcia</span><a href="#unveil">Back to the stars ↑</a></footer>
       </div>
-    </main><JourneyRocky />
+    </main><JourneyRocky /><SpaceAudio />
   </div>;
 }

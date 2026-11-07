@@ -38,6 +38,7 @@ export default function JourneyMotion() {
     }else{
      const assembly=Math.max(0,Math.min(1,(window.innerHeight*.95-bounds.top)/(window.innerHeight*.65)));
      art.style.setProperty('--assembly',String(assembly));
+     art.dataset.assembling=String(assembly<.99);
     }
    }
   };
@@ -55,7 +56,7 @@ export default function JourneyMotion() {
   return()=>{
    observer.disconnect();travel.disconnect();cancelAnimationFrame(frame);
    window.removeEventListener('scroll',queue);window.removeEventListener('resize',queue);
-   travelers.forEach(art=>{art.style.removeProperty('transform');art.style.removeProperty('--assembly');});
+   travelers.forEach(art=>{art.style.removeProperty('transform');art.style.removeProperty('--assembly');delete art.dataset.assembling;});
    animations.forEach(animation=>animation.cancel());
   };
  },[staticMotion]);

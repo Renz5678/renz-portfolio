@@ -737,3 +737,19 @@ to{translate:0 24px}
 .cosmic-pixel-assembly { background:transparent;mask-image:none; }
 .cosmic-portrait-tile { --tile-progress:clamp(0,calc(var(--assembly,1)*1.35 - var(--tile-delay)),1);--tile-scatter:calc(1 - var(--tile-progress));position:absolute;background:#d3e9a3;mask-image:url('/portrait/angle-1.webp');mask-size:600% 800%;mask-repeat:no-repeat;mask-mode:luminance;transform:translate(calc(var(--tile-scatter)*var(--tile-x)),calc(var(--tile-scatter)*var(--tile-y))) scale(calc(1 + var(--tile-scatter)*.2));opacity:calc(.15 + var(--tile-progress)*.85); }
 @media(prefers-reduced-motion:reduce) { .cosmic-portrait-tile { transform:none;opacity:1; } }
+/* Render the portrait once at rest; fragments exist only during assembly. */
+.cosmic-pixel-assembly { background:transparent;mix-blend-mode:screen;mask-image:none; }
+.cosmic-portrait-fallback { width:100%;height:100%;object-fit:contain; }
+.cosmic-portrait-tile { display:none;mask-image:none;background-image:url('/portrait/angle-1.webp');background-size:400% 600%;background-repeat:no-repeat; }
+.cosmic-portrait-image[data-assembling=true] .cosmic-portrait-fallback { visibility:hidden; }
+.cosmic-portrait-image[data-assembling=true] .cosmic-portrait-tile { display:block; }
+.cosmic-atmosphere:before { background-image:url('/cosmic/quiet-starfield.webp'); }
+.cosmic-galaxy-spin { background-image:url('/cosmic/spiral-galaxy.webp'); }
+.cosmic-space-art { background-image:url('/cosmic/space-art.webp'); }
+@media(prefers-reduced-motion:reduce) {
+ .cosmic-portrait-image[data-assembling=true] .cosmic-portrait-fallback { visibility:visible; }
+ .cosmic-portrait-image[data-assembling=true] .cosmic-portrait-tile { display:none; }
+}
+.cosmic-sound { position:fixed;left:max(12px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));z-index:41; }
+.cosmic-sound button { min-height:44px;padding:8px 12px;background:#08110ee8;border:1px solid var(--line);font:11px var(--font-jetbrains-mono),monospace;color:var(--ink); }
+.cosmic-sound span { display:block;max-width:180px;padding:8px;background:var(--void);font-size:11px; }
